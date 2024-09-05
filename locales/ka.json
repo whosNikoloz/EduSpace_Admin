@@ -1,0 +1,14 @@
+{
+  "Footer": {
+    "copyright": "© 2024 Your App. All rights reserved."
+  },
+  "Login": {
+    "loginTitle": "შესვლა",
+    "loginButton": "შესვლა",
+    "loginEmailError": "არასწორი ელ. ფოსტა",
+    "loginError": "შესვლა ვერ მოხერხდა",
+    "inputEmail": "ელ. ფოსტა",
+    "inputPassword": "პაროლი",
+    "title": "EduSpace ადმინ პანელი"
+  }
+}

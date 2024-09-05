@@ -1,0 +1,14 @@
+{
+  "Footer": {
+    "copyright": "© 2024 Your App. All rights reserved."
+  },
+  "Login": {
+    "loginTitle": "Login",
+    "loginButton": "Login",
+    "loginEmailError": "Invalid email",
+    "loginError": "Login failed",
+    "inputEmail": "Email",
+    "inputPassword": "Password",
+    "title": "EduSpace Admin Dashboard"
+  }
+}
