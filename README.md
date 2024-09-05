@@ -1,5 +1,13 @@
 # NextJS EduSpace Admin Dashboard
 
+### Dark Mode
+
+![Dashboard Dark Mode](./public/dark.png)
+
+### Light Mode
+
+![Dashboard Light Mode](./public/light.png)
+
 - Dark Mode Support
 - Full Responsive
 - Home Page with Charts
