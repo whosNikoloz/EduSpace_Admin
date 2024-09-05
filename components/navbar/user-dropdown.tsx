@@ -7,6 +7,7 @@ import { Settingicon } from "../icons/setting-icon";
 import ThemeSwitcher from "../theme-switch";
 import LanguageSwitcher from "../language-switch";
 import { Locale } from "@/i18n.config";
+import { useTranslations } from "@/actions/localisation";
 
 const transition = {
   type: "spring",
@@ -33,23 +34,8 @@ function UserDropdown({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const [translations, setTranslations] = useState<any>(null);
-
-  useEffect(() => {
-    const loadTranslations = async () => {
-      try {
-        const localeData = await import(`@/locales/${lang}.json`);
-        console.log(localeData);
-        setTranslations(localeData.default["UserDropDown"]);
-      } catch (error) {
-        console.error("Error loading translations:", error);
-      }
-    };
-
-    loadTranslations();
-  }, [lang]);
-
-
+  const translations = useTranslations(lang, 'UserDropDown');
+  
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -72,6 +58,11 @@ function UserDropdown({
     e.stopPropagation();
   };
 
+  
+  if(!translations){
+    return(
+    <div>Local Error</div>)
+  }
 
   return (
     <>

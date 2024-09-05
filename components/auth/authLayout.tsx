@@ -1,9 +1,10 @@
 "use client";
 
-import { Image } from "@nextui-org/react";
+import { Image, Spinner } from "@nextui-org/react";
 import { Divider } from "@nextui-org/divider";
 import { Locale } from "next/dist/compiled/@vercel/og/satori";
 import { useState, useEffect } from "react";
+import { useTranslations } from "@/actions/localisation";
 
 interface Props {
   children: React.ReactNode;
@@ -11,23 +12,10 @@ interface Props {
 }
 
 export const AuthLayoutWrapper = ({ children, lang }: Props) => {
-  const [translations, setTranslations] = useState<any>(null);
-
-  useEffect(() => {
-    const loadTranslations = async () => {
-      try {
-        const localeData = await import(`@/locales/${lang}.json`);
-        setTranslations(localeData.default["Login"]);
-      } catch (error) {
-        console.error("Error loading translations:", error);
-      }
-    };
-
-    loadTranslations();
-  }, [lang]);
+  const translations = useTranslations(lang, 'Login');
 
   if (!translations) {
-    return null;
+    return <Spinner />;
   }
 
   return (

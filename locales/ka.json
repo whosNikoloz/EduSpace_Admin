@@ -14,5 +14,18 @@
   "UserDropDown":{
     "accountSetting" : "პროფილი",
     "logOut" : "გასვლა"
+  },
+  "SideBar" : {
+    "home" : "Home",
+    "main_menu" : "Home",
+    "accountss" : "Accounts",
+    "payements" : "Payements",
+    "balances" : "Balances",
+    "customers" : "Customres",
+    "general" : "General",
+    "developers" : "Developers",
+    "settings" : "Settings",
+    "updates" : "Updates",
+    "changelog": "Changelog"
   }
 }

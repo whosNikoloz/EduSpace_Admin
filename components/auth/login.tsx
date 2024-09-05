@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import { InputLoadingBtn } from "./inputloadingbtn";
 import { Locale } from "@/i18n.config";
 import { Spinner } from "@nextui-org/spinner";
+import { useTranslations } from "@/actions/localisation";
 
 interface ApiResponse {
   success: boolean;
@@ -15,20 +16,9 @@ interface ApiResponse {
 }
 
 export default function Login({ lang }: { lang: Locale }) {
-  const [translations, setTranslations] = useState<any>(null);
 
-  useEffect(() => {
-    const loadTranslations = async () => {
-      try {
-        const localeData = await import(`@/locales/${lang}.json`);
-        setTranslations(localeData.default["Login"]);
-      } catch (error) {
-        console.error("Error loading translations:", error);
-      }
-    };
-
-    loadTranslations();
-  }, [lang]);
+  const translations = useTranslations(lang, 'Login');
+  console.log(translations);
 
   const router = useRouter();
   const [loginError, setLoginError] = useState("");
