@@ -1,18 +1,27 @@
 import { Input, Link, Navbar, NavbarContent } from "@nextui-org/react";
-import React from "react";
+import React, { useCallback } from "react";
 import { FeedbackIcon } from "../icons/navbar/feedback-icon";
 import { GithubIcon } from "../icons/navbar/github-icon";
 import { SupportIcon } from "../icons/navbar/support-icon";
 import { SearchIcon } from "../icons/searchicon";
 import { BurguerButton } from "./burguer-button";
 import { NotificationsDropdown } from "./notifications-dropdown";
-import { UserDropdown } from "./user-dropdown";
+import UserDropdown from "./user-dropdown";
+import { useRouter } from "next/navigation";
+import { useUser } from "@/app/dbcontext/UserdbContext";
 
 interface Props {
   children: React.ReactNode;
 }
 
 export const NavbarWrapper = ({ children }: Props) => {
+  const user = useUser();
+  const router = useRouter();
+  const handleLogout = useCallback(async () => {
+    user.logout();
+    router.replace("/login");
+  }, [router, user]);
+
   return (
     <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
       <Navbar
@@ -26,7 +35,7 @@ export const NavbarWrapper = ({ children }: Props) => {
           <BurguerButton />
         </NavbarContent>
         <NavbarContent className="w-full max-md:hidden">
-          <Input
+          {/* <Input
             startContent={<SearchIcon />}
             isClearable
             className="w-full"
@@ -35,7 +44,7 @@ export const NavbarWrapper = ({ children }: Props) => {
               mainWrapper: "w-full",
             }}
             placeholder="Search..."
-          />
+          /> */}
         </NavbarContent>
         <NavbarContent
           justify="end"
@@ -59,7 +68,13 @@ export const NavbarWrapper = ({ children }: Props) => {
             <GithubIcon />
           </Link>
           <NavbarContent>
-            <UserDropdown />
+            <UserDropdown
+              username={user.user?.userName || ""}
+              email={user.user?.email || ""}
+              avatar={user.user?.picture || ""}
+              logout={handleLogout}
+              lng={"en"}
+            />
           </NavbarContent>
         </NavbarContent>
       </Navbar>
