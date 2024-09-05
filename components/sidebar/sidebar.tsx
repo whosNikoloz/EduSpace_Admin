@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useTransition } from "react";
 import { Sidebar } from "./sidebar.styles";
-import { Avatar, Tooltip } from "@nextui-org/react";
+import { Avatar, Spinner, Tooltip } from "@nextui-org/react";
 import { CompaniesDropdown } from "./companies-dropdown";
 import { HomeIcon } from "../icons/sidebar/home-icon";
 import { PaymentsIcon } from "../icons/sidebar/payments-icon";
@@ -21,10 +21,22 @@ import { ChangeLogIcon } from "../icons/sidebar/changelog-icon";
 import { usePathname } from "next/navigation";
 import ThemeSwitcher from "../theme-switch";
 import LanguageSwitcher from "../language-switch";
+import { useTranslations } from "@/actions/localisation";
+import { Locale } from "@/i18n.config";
 
-export const SidebarWrapper = () => {
+
+interface Props {
+  lang : Locale
+}
+
+export const SidebarWrapper = ({ lang }: Props) => {
   const pathname = usePathname();
   const { collapsed, setCollapsed } = useSidebarContext();
+  const translations = useTranslations(lang, 'SideBar');
+
+  if(!translations){
+    return <Spinner />
+  }
 
   return (
     <aside className="h-screen z-[20] sticky top-0">
@@ -42,52 +54,52 @@ export const SidebarWrapper = () => {
         <div className="flex flex-col justify-between h-full">
           <div className={Sidebar.Body()}>
             <SidebarItem
-              title="Home"
+              title={translations.home}
               icon={<HomeIcon />}
               isActive={pathname === "/"}
               href="/"
             />
-            <SidebarMenu title="Main Menu">
+            <SidebarMenu title={translations.main_menu}>
               <SidebarItem
                 isActive={pathname === "/accounts"}
-                title="Accounts"
+                title={translations.accounts}
                 icon={<AccountsIcon />}
                 href="accounts"
               />
               <SidebarItem
                 isActive={pathname === "/payments"}
-                title="Payments"
+                title={translations.payements}
                 icon={<PaymentsIcon />}
               />
               <CollapseItems
                 icon={<BalanceIcon />}
                 items={["Banks Accounts", "Credit Cards", "Loans"]}
-                title="Balances"
+                title={translations.balances}
               />
               <SidebarItem
                 isActive={pathname === "/customers"}
-                title="Customers"
+                title={translations.customers}
                 icon={<CustomersIcon />}
               />
             </SidebarMenu>
 
-            <SidebarMenu title="General">
+            <SidebarMenu title={translations.general}>
               <SidebarItem
                 isActive={pathname === "/developers"}
-                title="Developers"
+                title={translations.developers}
                 icon={<DevIcon />}
               />
               <SidebarItem
                 isActive={pathname === "/settings"}
-                title="Settings"
+                title={translations.settings}
                 icon={<SettingsIcon />}
               />
             </SidebarMenu>
 
-            <SidebarMenu title="Updates">
+            <SidebarMenu title={translations.updates}>
               <SidebarItem
                 isActive={pathname === "/changelog"}
-                title="Changelog"
+                title={translations.changelog}
                 icon={<ChangeLogIcon />}
               />
             </SidebarMenu>

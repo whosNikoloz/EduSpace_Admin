@@ -16,16 +16,16 @@
     "logOut" : "გასვლა"
   },
   "SideBar" : {
-    "home" : "Home",
-    "main_menu" : "Home",
-    "accountss" : "Accounts",
-    "payements" : "Payements",
-    "balances" : "Balances",
-    "customers" : "Customres",
-    "general" : "General",
-    "developers" : "Developers",
-    "settings" : "Settings",
-    "updates" : "Updates",
-    "changelog": "Changelog"
+    "home": "მთავარი",
+    "main_menu": "მთავარი მენიუ",
+    "accounts": "ანგარიშები",
+    "payements": "გადახდები",
+    "balances": "ბალანსები",
+    "customers": "კლიენტები",
+    "general": "ზოგადი",
+    "developers": "განვითარების გუნდმა",
+    "settings": "პარამეტრები",
+    "updates": "განახლებები",
+    "changelog": "შეცვლილებათა ისტორია"
   }
 }
