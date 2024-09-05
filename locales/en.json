@@ -10,5 +10,9 @@
     "inputEmail": "Email",
     "inputPassword": "Password",
     "title": "EduSpace Admin Dashboard"
+  },
+  "UserDropDown":{
+    "accountSetting" : "Account Settings",
+    "logOut" : "Log Out"
   }
 }

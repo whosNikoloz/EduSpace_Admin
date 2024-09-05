@@ -5,12 +5,14 @@ import { useLockedBody } from "../hooks/useBodyLock";
 import { NavbarWrapper } from "../navbar/navbar";
 import { SidebarWrapper } from "../sidebar/sidebar";
 import { SidebarContext } from "./layout-context";
+import { Locale } from "@/i18n.config";
 
 interface Props {
   children: React.ReactNode;
+  lang : Locale
 }
 
-export const Layout = ({ children }: Props) => {
+export const Layout = ({ children,lang }: Props) => {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const [_, setLocked] = useLockedBody(false);
   const handleToggleSidebar = () => {
@@ -26,7 +28,7 @@ export const Layout = ({ children }: Props) => {
       }}>
       <section className='flex'>
         <SidebarWrapper />
-        <NavbarWrapper>{children}</NavbarWrapper>
+        <NavbarWrapper lang={lang}>{children}</NavbarWrapper>
       </section>
     </SidebarContext.Provider>
   );

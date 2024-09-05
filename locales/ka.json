@@ -10,5 +10,9 @@
     "inputEmail": "ელ. ფოსტა",
     "inputPassword": "პაროლი",
     "title": "EduSpace ადმინ პანელი"
+  },
+  "UserDropDown":{
+    "accountSetting" : "პროფილი",
+    "logOut" : "გასვლა"
   }
 }

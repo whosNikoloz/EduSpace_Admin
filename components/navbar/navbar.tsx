@@ -9,12 +9,14 @@ import { NotificationsDropdown } from "./notifications-dropdown";
 import UserDropdown from "./user-dropdown";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/app/dbcontext/UserdbContext";
+import { Locale } from "@/i18n.config";
 
 interface Props {
   children: React.ReactNode;
+  lang : Locale
 }
 
-export const NavbarWrapper = ({ children }: Props) => {
+export const NavbarWrapper = ({ children,lang }: Props) => {
   const user = useUser();
   const router = useRouter();
   const handleLogout = useCallback(async () => {
@@ -73,7 +75,7 @@ export const NavbarWrapper = ({ children }: Props) => {
               email={user.user?.email || ""}
               avatar={user.user?.picture || ""}
               logout={handleLogout}
-              lng={"en"}
+              lang={lang}
             />
           </NavbarContent>
         </NavbarContent>

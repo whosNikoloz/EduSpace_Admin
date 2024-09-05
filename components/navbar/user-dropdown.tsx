@@ -6,6 +6,7 @@ import { LogoutIcon } from "../icons/Logout_icon";
 import { Settingicon } from "../icons/setting-icon";
 import ThemeSwitcher from "../theme-switch";
 import LanguageSwitcher from "../language-switch";
+import { Locale } from "@/i18n.config";
 
 const transition = {
   type: "spring",
@@ -21,16 +22,33 @@ function UserDropdown({
   email,
   avatar,
   logout,
-  lng,
+  lang,
 }: {
   username: string;
   email: string;
   avatar: string;
   logout: () => void;
-  lng: string;
+  lang: Locale;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const [translations, setTranslations] = useState<any>(null);
+
+  useEffect(() => {
+    const loadTranslations = async () => {
+      try {
+        const localeData = await import(`@/locales/${lang}.json`);
+        console.log(localeData);
+        setTranslations(localeData.default["UserDropDown"]);
+      } catch (error) {
+        console.error("Error loading translations:", error);
+      }
+    };
+
+    loadTranslations();
+  }, [lang]);
+
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -53,6 +71,7 @@ function UserDropdown({
     // Prevent the event from propagating to the document level
     e.stopPropagation();
   };
+
 
   return (
     <>
@@ -91,12 +110,12 @@ function UserDropdown({
                   {email}
                 </p>
               </div>
-              <Link href={`/${lng}/user/profile`}>
+              <Link href={`/${lang}/user/profile`}>
                 <Button
                   endContent={<Settingicon size={20} height={20} width={20} />}
                   className="px-4 py-3 text-sm w-full justify-between mt-2 text-gray-600 bg-transparent capitalize transition-colors duration-300 transform dark:text-gray-300 hover:bg-[#d4d4d8] dark:hover:bg-[#3f3f46] dark:hover:text-white"
                 >
-                  {lng === "en" ? "Account Settings" : "პროფილი"}
+                  {translations.accountSetting}
                 </Button>
               </Link>
               <Button
@@ -105,7 +124,7 @@ function UserDropdown({
                 className="px-4 py-3 text-sm w-full justify-between  bg-transparent  transition-colors duration-300 transform text-danger hover:bg-[#d4d4d8] dark:hover:bg-[#3f3f46] dark:hover:text-white "
                 endContent={<LogoutIcon size={20} height={20} width={20} />}
               >
-                {lng === "en" ? "Log out" : "გასვლა"}
+               {translations.logOut}
               </Button>
               <Divider className="my-4 " />
               <ThemeSwitcher />
