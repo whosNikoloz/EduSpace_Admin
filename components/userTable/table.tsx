@@ -20,8 +20,10 @@ interface ApiResponse<T> {
 
 const columns = [
   { name: "NAME", uid: "name" },
-  { name: "ROLE", uid: "role" },
-  { name: "STATUS", uid: "status" },
+  { name: "FIRSTNAME", uid: "firstname" },
+  { name: "LASTNAME", uid: "lastname" },
+  { name: "PHONE", uid: "phone" },
+  { name: "EMAIL", uid: "email" },
   { name: "ACTIONS", uid: "actions" },
 ];
 
@@ -62,6 +64,13 @@ export function TableWrapper() {
     setUsers((prevUsers) => prevUsers.filter((user) => user.userId !== userId));
   };
 
+  const handleUserEdit = (updatedUser: UserModel) => {
+    setUsers((prevUsers) =>
+      prevUsers.map((user) =>
+        user.userId === updatedUser.userId ? updatedUser : user
+      )
+    );
+  };
   const filteredUsers = users.filter((user) => user.role !== "admin");
 
   return (
@@ -87,6 +96,7 @@ export function TableWrapper() {
                     user: item,
                     columnKey: column.uid,
                     onUserDelete: handleUserDelete,
+                    onUserEdit: handleUserEdit,
                   })}
                 </TableCell>
               ))}

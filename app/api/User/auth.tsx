@@ -397,8 +397,10 @@ const Authentication = () => {
       });
 
       if (response.ok) {
+        return { success: true, result: "Updated" };
       } else {
         const errorText = await response.text();
+        return { success: false, result: errorText };
         return errorText;
       }
     } catch (error) {

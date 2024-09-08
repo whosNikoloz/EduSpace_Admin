@@ -4,14 +4,21 @@ import { DeleteIcon } from "../icons/table/delete-icon";
 import { EditIcon } from "../icons/table/edit-icon";
 import { EyeIcon } from "../icons/table/eye-icon";
 import { DeleteUser } from "./deleteuser";
+import { Edituser } from "./edit-user";
 
 interface Props {
   user: UserModel;
   columnKey: string | React.Key;
   onUserDelete?: (userId: number) => void;
+  onUserEdit?: (user: UserModel) => void;
 }
 
-export const RenderCell = ({ user, columnKey, onUserDelete }: Props) => {
+export const RenderCell = ({
+  user,
+  columnKey,
+  onUserDelete,
+  onUserEdit,
+}: Props) => {
   // @ts-ignore
   const cellValue = user[columnKey];
 
@@ -21,8 +28,10 @@ export const RenderCell = ({ user, columnKey, onUserDelete }: Props) => {
     }
   };
 
-  const handleUserEdit = (userId: number) => {
-    console.log("Edit user", userId);
+  const handleUserEdit = (user: UserModel) => {
+    if (onUserEdit) {
+      onUserEdit(user);
+    }
   };
 
   const handleUserView = (userId: number) => {
@@ -42,15 +51,22 @@ export const RenderCell = ({ user, columnKey, onUserDelete }: Props) => {
           {user.userName}
         </User>
       );
-    case "role":
-      return <span>{user.role}</span>;
-    case "status":
-      return (
-        <Chip size="sm" variant="flat" color={"success"}>
-          <span className="capitalize text-xs">active</span>
-        </Chip>
-      );
-
+    case "firstname":
+      return <span>{user.firstName}</span>;
+    case "lastname":
+      return <span>{user.lastName}</span>;
+    // case "role":
+    //   return <span>{user.role}</span>;
+    // case "status":
+    //   return (
+    //     <Chip size="sm" variant="flat" color={"success"}>
+    //       <span className="capitalize text-xs">active</span>
+    //     </Chip>
+    //   );
+    case "phone":
+      return <span>{user.phoneNumber}</span>;
+    case "email":
+      return <span>{user.email}</span>;
     case "actions":
       return (
         <div className="flex items-center gap-4 ">
@@ -61,13 +77,8 @@ export const RenderCell = ({ user, columnKey, onUserDelete }: Props) => {
               </button>
             </Tooltip>
           </div>
-          <div>
-            <Tooltip content="Edit user" color="secondary">
-              <button onClick={() => handleUserEdit(user.userId)}>
-                <EditIcon size={20} fill="#979797" />
-              </button>
-            </Tooltip>
-          </div>
+          <Edituser onUpdateUser={handleUserEdit} user={user} />
+
           <div>
             <DeleteUser userId={user.userId} onUserDelete={handleUserRemove} />
           </div>

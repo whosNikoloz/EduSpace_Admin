@@ -9,6 +9,7 @@ import { CardAgents } from "./card-agents";
 import { CardTransactions } from "./card-transactions";
 import { Link } from "@nextui-org/react";
 import NextLink from "next/link";
+import { Toaster } from "react-hot-toast";
 
 const Chart = dynamic(
   () => import("../charts/steam").then((mod) => mod.Steam),
@@ -65,5 +66,6 @@ export const Content = () => (
       </div>
       <TableWrapper />
     </div>
+    <Toaster position="bottom-right" />
   </div>
 );

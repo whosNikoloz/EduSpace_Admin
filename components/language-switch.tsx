@@ -64,14 +64,6 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
     }
   }, [lang]);
 
-  const handleSwitchChange = () => {
-    if (lang === "en") {
-      handleLanguageChange("ka");
-    } else {
-      handleLanguageChange("en");
-    }
-  };
-
   if (isSmall) {
     return (
       <>
@@ -85,9 +77,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
           >
             <Avatar
               alt="Georgia"
-              className={`w-5 h-5 ${
-                lang === "ka" ? "bg-blue-100" : "bg-transparent"
-              } rounded-full`}
+              className={`w-5 h-5 ${"bg-transparent"} rounded-full`}
               src="https://flagsapi.com/GE/flat/64.png"
             />
           </Button>
@@ -100,9 +90,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
           >
             <Avatar
               alt="English"
-              className={`w-5 h-5 ${
-                lang === "en" ? "bg-blue-100" : "bg-transparent"
-              } rounded-full`}
+              className={`w-5 h-5 ${"bg-transparent"} rounded-full`}
               src="https://flagsapi.com/US/flat/64.png"
             />
           </Button>
