@@ -53,7 +53,35 @@ const Levels = () => {
     }
   };
 
+  const handleUpdateLevel = async (levelId: number, data: any) => {};
+
+  const handleAddLevel = async (data: any) => {
+    try {
+      const token = await getAuthCookie();
+      const response = await fetch(learn_API, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data), // Convert data to JSON
+      });
+
+      if (response.ok) {
+        const result = await response.json(); // Parse the result if needed
+        return { success: true, result }; // Return the result on success
+      } else {
+        const errorText = await response.text(); // Extract error details
+        return { success: false, result: errorText }; // Return the error details
+      }
+    } catch (error) {
+      console.error("Error while adding level:", error);
+      return { success: false, error }; // Return error if fetch fails
+    }
+  };
+
   return {
+    handleAddLevel,
     handleRemoveLevel,
     GetLevel,
   };

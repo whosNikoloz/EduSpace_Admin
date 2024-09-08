@@ -11,6 +11,7 @@ import { UsersIcon } from "@/components/icons/breadcrumb/users-icon";
 import { SettingsIcon } from "@/components/icons/sidebar/settings-icon";
 import { TableWrapper } from "@/components/userTable/table";
 import { AddUser } from "./add-user";
+import { Toaster } from "react-hot-toast";
 
 export const Accounts = () => {
   return (
@@ -59,6 +60,7 @@ export const Accounts = () => {
       <div className="max-w-[95rem] mx-auto w-full">
         <TableWrapper />
       </div>
+      <Toaster position="bottom-right" />
     </div>
   );
 };
