@@ -51,7 +51,7 @@ export const DeleteLevel = ({ levelId, onLevelDelete }: Props) => {
 
   return (
     <div>
-      <Tooltip content="Delete user" color="danger">
+      <Tooltip content="Delete level" color="danger">
         <button onClick={handleOpen}>
           <DeleteIcon size={20} fill="#FF0080" />
         </button>

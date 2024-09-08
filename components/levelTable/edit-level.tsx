@@ -6,6 +6,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  Tooltip,
   useDisclosure,
 } from "@nextui-org/react";
 import React, { useState } from "react";
@@ -76,9 +77,11 @@ export const EditLevel = ({ onUpdateLevel, level }: Props) => {
   return (
     <div>
       <>
-        <Button isIconOnly className="bg-transparent" onPress={onOpen}>
-          <EditIcon size={20} fill="#979797" />
-        </Button>
+        <Tooltip content="Edit level" color="primary">
+          <Button isIconOnly className="bg-transparent" onPress={onOpen}>
+            <EditIcon size={20} fill="#979797" />
+          </Button>
+        </Tooltip>
         <Modal
           isOpen={isOpen}
           onOpenChange={onOpenChange}

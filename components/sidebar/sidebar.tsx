@@ -115,19 +115,6 @@ export const SidebarWrapper = ({ lang }: Props) => {
               />
             </SidebarMenu>
 
-            <SidebarMenu title={translations.general}>
-              <SidebarItem
-                isActive={pathname === "/developers"}
-                title={translations.developers}
-                icon={<DevIcon />}
-              />
-              <SidebarItem
-                isActive={pathname === "/settings"}
-                title={translations.settings}
-                icon={<SettingsIcon />}
-              />
-            </SidebarMenu>
-
             <SidebarMenu title={translations.updates}>
               <SidebarItem
                 isActive={pathname === "/changelog"}

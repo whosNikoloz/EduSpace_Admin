@@ -1,5 +1,5 @@
 "use client";
-import { Avatar } from "@nextui-org/react";
+import { Avatar, Button, Switch } from "@nextui-org/react";
 import { Select, SelectItem } from "@nextui-org/select";
 import { usePathname, useRouter } from "next/navigation";
 import React, { ReactNode, useEffect, useState } from "react";
@@ -64,44 +64,48 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
     }
   }, [lang]);
 
+  const handleSwitchChange = () => {
+    if (lang === "en") {
+      handleLanguageChange("ka");
+    } else {
+      handleLanguageChange("en");
+    }
+  };
+
   if (isSmall) {
     return (
       <>
-        <div className="flex gap-4  justify-between ">
-          <Select
-            className="w-[80px]"
-            size="sm"
-            variant="bordered"
-            onChange={(event) => handleLanguageChange(event.target.value)}
-            aria-label="Select Language"
-            labelPlacement="outside"
-            defaultSelectedKeys={[lang || `ka`]}
-            startContent={lngstartCon}
+        <div className="flex gap-1  justify-between ">
+          <Button
+            isIconOnly
+            onClick={() => handleLanguageChange("ka")}
+            className={`bg-transparent ${
+              lang === "ka" ? "border border-blue-500" : ""
+            } p-1 rounded-full`}
           >
-            <SelectItem
-              key="ka"
-              value={"georgia"}
-              startContent={
-                <Avatar
-                  alt="Georgia"
-                  className="w-5 h-5 bg-transparent"
-                  src="https://flagsapi.com/GE/flat/64.png"
-                />
-              }
-            ></SelectItem>
-            <SelectItem
-              key="en"
-              value={"english"}
-              onClick={() => handleLanguageChange("en")}
-              startContent={
-                <Avatar
-                  alt="English"
-                  className="w-5 h-5 bg-transparent"
-                  src="https://flagsapi.com/US/flat/64.png"
-                />
-              }
-            ></SelectItem>
-          </Select>
+            <Avatar
+              alt="Georgia"
+              className={`w-5 h-5 ${
+                lang === "ka" ? "bg-blue-100" : "bg-transparent"
+              } rounded-full`}
+              src="https://flagsapi.com/GE/flat/64.png"
+            />
+          </Button>
+          <Button
+            isIconOnly
+            onClick={() => handleLanguageChange("en")}
+            className={`bg-transparent ${
+              lang === "en" ? "border border-blue-500" : ""
+            } p-1 rounded-full`}
+          >
+            <Avatar
+              alt="English"
+              className={`w-5 h-5 ${
+                lang === "en" ? "bg-blue-100" : "bg-transparent"
+              } rounded-full`}
+              src="https://flagsapi.com/US/flat/64.png"
+            />
+          </Button>
         </div>
       </>
     );

@@ -5,6 +5,7 @@ import { MoonFilledIcon } from "./icons/theme/moon-filled-icon";
 import { SunFilledIcon } from "./icons/theme/sun-filled-icon";
 import { SystemIcon } from "./icons/theme/system-icon";
 import { Select, SelectItem } from "@nextui-org/select";
+import { Switch } from "@nextui-org/react";
 
 interface ThemeSwitcherProps {
   isSmall?: boolean;
@@ -49,30 +50,25 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({ isSmall = false }) => {
     }
   };
 
+  const handleSwitchChange = () => {
+    if (theme === "dark") {
+      setTheme("light");
+    } else {
+      setTheme("dark");
+    }
+  };
+
   if (isSmall) {
     return (
       <>
         <div className="flex gap-4  justify-between ">
-          <Select
-            className="w-[80px]"
-            size="sm"
-            variant="bordered"
-            onChange={handleThemeChange}
-            aria-label="Select theme"
-            labelPlacement="outside"
-            defaultSelectedKeys={[theme || "system"]}
-            startContent={startCon}
-          >
-            <SelectItem key="dark" value={"dark"}>
-              <MoonFilledIcon size={20} height={20} width={20} />
-            </SelectItem>
-            <SelectItem key="light" value={"light"}>
-              <SunFilledIcon size={20} height={20} width={20} />
-            </SelectItem>
-            <SelectItem key="system" value={"system"}>
-              <SystemIcon size={20} height={20} width={20} />
-            </SelectItem>
-          </Select>
+          <Switch
+            defaultSelected
+            size="md"
+            onClick={handleSwitchChange}
+            startContent={<SunFilledIcon size={15} />}
+            endContent={<MoonFilledIcon size={15} />}
+          ></Switch>
         </div>
       </>
     );
