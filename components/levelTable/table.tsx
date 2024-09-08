@@ -31,26 +31,15 @@ interface LevelModel {
   description_en: string;
   courses: [];
 }
+interface Props {
+  levels: LevelModel[];
+}
 
-export function TableWrapper() {
-  const [levels, setLevels] = useState<LevelModel[]>([]);
-
-  const levelAPi = Levels();
-
+export const TableWrapper = ({ levels }: Props) => {
+  const [locallevels, setLevels] = useState<LevelModel[]>(levels);
   useEffect(() => {
-    const fetchLevels = async () => {
-      try {
-        const fetchedLevels = await levelAPi.GetLevel();
-        console.log(fetchedLevels);
-        setLevels(fetchedLevels);
-      } catch (error) {
-        console.error("Error fetching levels:", error);
-      }
-    };
-
-    fetchLevels();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    setLevels(levels);
+  }, [levels]);
 
   const handleLevelDelete = (levelId: number) => {
     setLevels((prevLevels) =>
@@ -76,7 +65,7 @@ export function TableWrapper() {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={levels}>
+        <TableBody items={locallevels}>
           {(level) => (
             <TableRow key={level.levelId}>
               {columns.map((column) => (
@@ -94,4 +83,4 @@ export function TableWrapper() {
       </Table>
     </div>
   );
-}
+};

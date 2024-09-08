@@ -55,7 +55,7 @@ const Levels = () => {
 
   const handleUpdateLevel = async (levelId: number, data: any) => {};
 
-  const handleAddLevel = async (data: any) => {
+  const handleAddLevel = async (levelData: any) => {
     try {
       const token = await getAuthCookie();
       const response = await fetch(learn_API, {
@@ -64,12 +64,26 @@ const Levels = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(data), // Convert data to JSON
+        body: JSON.stringify(levelData), // Convert data to JSON
       });
 
       if (response.ok) {
-        const result = await response.json(); // Parse the result if needed
-        return { success: true, result }; // Return the result on success
+        const responseData = await response.json();
+
+        if (responseData.successful) {
+          try {
+            return { success: true, result: responseData.level };
+          } catch (error) {
+            console.error("Error setting Level:", error);
+            return { success: false, error: "Error setting level" };
+          }
+        } else {
+          console.error("Unsuccessful response:", responseData);
+          return {
+            success: false,
+            result: responseData.error || "Unknown error",
+          };
+        }
       } else {
         const errorText = await response.text(); // Extract error details
         return { success: false, result: errorText }; // Return the error details

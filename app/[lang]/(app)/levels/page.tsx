@@ -1,8 +1,8 @@
 import React from "react";
-import { Levels } from "@/components/levels";
+import { LevelsIndex } from "@/components/levels";
 
 const levels = () => {
-  return <Levels />;
+  return <LevelsIndex />;
 };
 
 export default levels;

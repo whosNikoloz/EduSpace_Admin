@@ -16,7 +16,11 @@ interface ApiResponse<T> {
   result?: T;
 }
 
-export const AddLevel = () => {
+interface Props {
+  onAddNewLevel: (newLevel: any) => void;
+}
+
+export const AddLevel = ({ onAddNewLevel }: Props) => {
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const [name_en, setName_en] = useState("");
   const [name_ka, setName_ka] = useState("");
@@ -30,6 +34,15 @@ export const AddLevel = () => {
     logoURL: "",
     description_ka: "",
     description_en: "",
+  };
+
+  const sentNewLevelData = {
+    levelId: 0,
+    levelName_ka: name_ka,
+    levelName_en: name_en,
+    logoURL: "",
+    description_ka: description_ka,
+    description_en: description_en,
   };
 
   const levelAPI = Levels();
@@ -47,6 +60,7 @@ export const AddLevel = () => {
       //onLevelDelete(levelId);
       setIsLoading(false);
       onClose();
+      onAddNewLevel(response.result);
       toast.success("User deleted successfully");
     } else {
       setIsLoading(false);

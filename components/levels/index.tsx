@@ -1,7 +1,7 @@
 "use client";
 import { Button, Input } from "@nextui-org/react";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DotsIcon } from "@/components/icons/accounts/dots-icon";
 import { InfoIcon } from "@/components/icons/accounts/info-icon";
 import { TrashIcon } from "@/components/icons/accounts/trash-icon";
@@ -11,8 +11,41 @@ import { SettingsIcon } from "@/components/icons/sidebar/settings-icon";
 import { TableWrapper } from "@/components/levelTable/table";
 import { AddLevel } from "./add-level";
 import { Toaster } from "react-hot-toast";
+import Levels from "@/app/api/Learn/Level";
 
-export const Levels = () => {
+interface LevelModel {
+  levelId: number;
+  levelName_ka: string;
+  levelName_en: string;
+  logoURL: string;
+  description_ka: string;
+  description_en: string;
+  courses: [];
+}
+
+export const LevelsIndex = () => {
+  const [levels, setLevels] = useState<LevelModel[]>([]);
+
+  const levelAPi = Levels();
+
+  useEffect(() => {
+    const fetchLevels = async () => {
+      try {
+        const fetchedLevels = await levelAPi.GetLevel();
+        console.log("22", fetchedLevels);
+        setLevels(fetchedLevels);
+      } catch (error) {
+        console.error("Error fetching levels:", error);
+      }
+    };
+
+    fetchLevels();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleAddlevel = (newLevel: any) => {
+    setLevels((prevLevels) => [...prevLevels, newLevel]);
+  };
   return (
     <div className="my-10 px-4 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
       <ul className="flex">
@@ -50,11 +83,11 @@ export const Levels = () => {
           <DotsIcon />
         </div>
         <div className="flex flex-row gap-3.5 flex-wrap">
-          <AddLevel />
+          <AddLevel onAddNewLevel={handleAddlevel} />
         </div>
       </div>
       <div className="max-w-[95rem] mx-auto w-full">
-        <TableWrapper />
+        <TableWrapper levels={levels} />
       </div>
       <Toaster position="bottom-right" />
     </div>
