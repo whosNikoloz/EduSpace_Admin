@@ -1,8 +1,8 @@
 import React from "react";
-import { Accounts } from "@/components/accounts";
+import { Levels } from "@/components/levels";
 
 const levels = () => {
-  return <h1>Test</h1>;
+  return <Levels />;
 };
 
 export default levels;
