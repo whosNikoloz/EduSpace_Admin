@@ -16,8 +16,7 @@ interface ApiResponse {
 }
 
 export default function Login({ lang }: { lang: Locale }) {
-
-  const translations = useTranslations(lang, 'Login');
+  const translations = useTranslations(lang, "Login");
   console.log(translations);
 
   const router = useRouter();
@@ -65,7 +64,9 @@ export default function Login({ lang }: { lang: Locale }) {
     }
   };
 
-  const handleLogin = async () => {
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
     setIsLoading(true);
     setLoginError("");
 
@@ -93,7 +94,7 @@ export default function Login({ lang }: { lang: Locale }) {
       <div className="text-center text-[25px] font-bold mb-6">
         {translations.loginTitle || "Login"}
       </div>
-      <div className="flex flex-col w-1/2 gap-4 mb-4">
+      <form onSubmit={handleLogin} className="flex flex-col w-1/2 gap-4 mb-4">
         <Input
           variant="bordered"
           label="Email"
@@ -128,19 +129,24 @@ export default function Login({ lang }: { lang: Locale }) {
           onChange={(e) => setPassword(e.target.value)}
           startContent={<i className="fas fa-lock"></i>}
         />
-      </div>
-      {loginError && (
-        <div className="text-red-500 text-center ">{loginError}</div>
-      )}
+        <div className="flex justify-center">
+          {loginError && (
+            <div className="text-red-500 text-center ">{loginError}</div>
+          )}
+        </div>
 
-      <Button
-        onPress={() => handleLogin()}
-        isLoading={isLoading}
-        variant="flat"
-        color="primary"
-      >
-        {translations.loginButton || "Login"}
-      </Button>
+        <div className="flex justify-center">
+          <Button
+            type="submit" // Ensures the button is of type submit
+            isLoading={isLoading}
+            variant="flat"
+            color="primary"
+            className="sm:w-1/5 w-3/4"
+          >
+            {translations.loginButton || "Login"}
+          </Button>
+        </div>
+      </form>
     </>
   );
 }
