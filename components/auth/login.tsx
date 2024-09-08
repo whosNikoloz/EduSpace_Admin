@@ -17,7 +17,6 @@ interface ApiResponse {
 
 export default function Login({ lang }: { lang: Locale }) {
   const translations = useTranslations(lang, "Login");
-  console.log(translations);
 
   const router = useRouter();
   const [loginError, setLoginError] = useState("");

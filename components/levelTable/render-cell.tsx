@@ -38,6 +38,8 @@ export const RenderLevelCell = ({
     }
   };
 
+  const CourseCount = level.courses.length;
+
   const handleLevelEdit = (updatedLevel: LevelModel) => {
     if (onLevelEdit) {
       onLevelEdit(updatedLevel);
@@ -66,7 +68,7 @@ export const RenderLevelCell = ({
     case "description_en":
       return <span>{level.description_en}</span>;
     case "courses":
-      return <span>5</span>;
+      return <span>{CourseCount}</span>;
     case "actions":
       return (
         <div className="flex items-center gap-4">
