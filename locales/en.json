@@ -11,21 +11,24 @@
     "inputPassword": "Password",
     "title": "EduSpace Admin Dashboard"
   },
-  "UserDropDown":{
-    "accountSetting" : "Account Settings",
-    "logOut" : "Log Out"
+  "UserDropDown": {
+    "accountSetting": "Account Settings",
+    "logOut": "Log Out"
   },
-  "SideBar" : {
-    "home" : "Home",
-    "main_menu" : "Home",
-    "accounts" : "Accounts",
-    "payements" : "Payements",
-    "balances" : "Balances",
-    "customers" : "Customres",
-    "general" : "General",
-    "developers" : "Developers",
-    "settings" : "Settings",
-    "updates" : "Updates",
+  "SideBar": {
+    "home": "Home",
+    "main_menu": "Home",
+    "data": "Data",
+    "courses": "Courses",
+    "levels": "Levels",
+    "accounts": "Accounts",
+    "payements": "Payements",
+    "balances": "Balances",
+    "customers": "Customres",
+    "general": "General",
+    "developers": "Developers",
+    "settings": "Settings",
+    "updates": "Updates",
     "changelog": "Changelog"
   }
 }

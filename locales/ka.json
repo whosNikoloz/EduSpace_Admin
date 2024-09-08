@@ -11,14 +11,17 @@
     "inputPassword": "პაროლი",
     "title": "EduSpace ადმინ პანელი"
   },
-  "UserDropDown":{
-    "accountSetting" : "პროფილი",
-    "logOut" : "გასვლა"
+  "UserDropDown": {
+    "accountSetting": "პროფილი",
+    "logOut": "გასვლა"
   },
-  "SideBar" : {
+  "SideBar": {
     "home": "მთავარი",
     "main_menu": "მთავარი მენიუ",
     "accounts": "ანგარიშები",
+    "data": "მონაცემები",
+    "levels": "დონეები",
+    "courses": "კურსები",
     "payements": "გადახდები",
     "balances": "ბალანსები",
     "customers": "კლიენტები",
