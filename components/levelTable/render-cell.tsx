@@ -4,6 +4,7 @@ import { DeleteIcon } from "../icons/table/delete-icon";
 import { EditIcon } from "../icons/table/edit-icon";
 import { EyeIcon } from "../icons/table/eye-icon";
 import { DeleteLevel } from "./delete-level";
+import { EditLevel } from "./edit-level";
 
 interface LevelModel {
   levelId: number;
@@ -19,9 +20,15 @@ interface Props {
   level: LevelModel;
   columnKey: string | React.Key;
   onLevelDelete?: (levelId: number) => void;
+  onLevelEdit?: (level: LevelModel) => void;
 }
 
-export const RenderLevelCell = ({ level, columnKey, onLevelDelete }: Props) => {
+export const RenderLevelCell = ({
+  level,
+  columnKey,
+  onLevelDelete,
+  onLevelEdit,
+}: Props) => {
   // @ts-ignore
   const cellValue = level[columnKey];
 
@@ -31,8 +38,10 @@ export const RenderLevelCell = ({ level, columnKey, onLevelDelete }: Props) => {
     }
   };
 
-  const handleLevelEdit = (levelId: number) => {
-    console.log("Edit level", levelId);
+  const handleLevelEdit = (updatedLevel: LevelModel) => {
+    if (onLevelEdit) {
+      onLevelEdit(updatedLevel);
+    }
   };
 
   const handleLevelView = (levelId: number) => {
@@ -61,16 +70,7 @@ export const RenderLevelCell = ({ level, columnKey, onLevelDelete }: Props) => {
     case "actions":
       return (
         <div className="flex items-center gap-4">
-          <Tooltip content="Details">
-            <button onClick={() => handleLevelView(level.levelId)}>
-              <EyeIcon size={20} fill="#979797" />
-            </button>
-          </Tooltip>
-          <Tooltip content="Edit level" color="secondary">
-            <button onClick={() => handleLevelEdit(level.levelId)}>
-              <EditIcon size={20} fill="#979797" />
-            </button>
-          </Tooltip>
+          <EditLevel onUpdateLevel={handleLevelEdit} level={level} />
           <DeleteLevel
             levelId={level.levelId}
             onLevelDelete={handleLevelRemove}

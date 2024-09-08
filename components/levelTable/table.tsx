@@ -47,6 +47,14 @@ export const TableWrapper = ({ levels }: Props) => {
     );
   };
 
+  const hanldeLevelEdit = (updatedLevel: LevelModel) => {
+    setLevels((prevLevels) =>
+      prevLevels.map((level) =>
+        level.levelId === updatedLevel.levelId ? updatedLevel : level
+      )
+    );
+  };
+
   if (levels.length === 0) {
     <Spinner />;
   }
@@ -74,6 +82,7 @@ export const TableWrapper = ({ levels }: Props) => {
                     level: level, // Pass the level instead of user
                     columnKey: column.uid,
                     onLevelDelete: handleLevelDelete, // Correct function name
+                    onLevelEdit: hanldeLevelEdit, // Correct function name
                   })}
                 </TableCell>
               ))}

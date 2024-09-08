@@ -53,7 +53,39 @@ const Levels = () => {
     }
   };
 
-  const handleUpdateLevel = async (levelId: number, data: any) => {};
+  const handleUpdateLevel = async (levelId: number, data: any) => {
+    try {
+      const token = await getAuthCookie();
+      const response = await fetch(learn_API + levelId, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+
+        if (responseData.successful) {
+          return { success: true, result: responseData.level };
+        } else {
+          console.error("Unsuccessful response:", responseData);
+          return {
+            success: false,
+            result: responseData.error || "Unknown error",
+          };
+        }
+      } else {
+        const errorText = await response.text();
+        return { success: false, result: errorText };
+      }
+    } catch (error) {
+      console.error("Error while updating level:", error);
+      return { success: false, error };
+    }
+  };
 
   const handleAddLevel = async (levelData: any) => {
     try {
@@ -95,6 +127,7 @@ const Levels = () => {
   };
 
   return {
+    handleUpdateLevel,
     handleAddLevel,
     handleRemoveLevel,
     GetLevel,
