@@ -42,20 +42,18 @@ export const EditLevel = ({ onUpdateLevel, level }: Props) => {
   const [description_ka, setDescription_ka] = useState(level.description_ka);
   const [isLoading, setIsLoading] = useState(false);
 
-  const newLevelData = {
-    levelName_ka: "",
-    levelName_en: "",
-    logoURL: "",
-    description_ka: "",
-    description_en: "",
-  };
-
   const levelAPI = Levels();
-  const handlLevelUpdate = async () => {
-    newLevelData.levelName_en = name_en;
-    newLevelData.levelName_ka = name_ka;
-    newLevelData.description_en = description_en;
-    newLevelData.description_ka = description_ka;
+
+  const handleLevelUpdate = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const newLevelData = {
+      levelName_en: name_en,
+      levelName_ka: name_ka,
+      description_en: description_en,
+      description_ka: description_ka,
+      logoURL: level.logoURL, // Assuming you keep the existing logo URL
+    };
 
     setIsLoading(true);
     const response: ApiResponse<any> = (await levelAPI.handleUpdateLevel(
@@ -76,66 +74,62 @@ export const EditLevel = ({ onUpdateLevel, level }: Props) => {
 
   return (
     <div>
-      <>
-        <Tooltip content="Edit level" color="primary">
-          <Button isIconOnly className="bg-transparent" onPress={onOpen}>
-            <EditIcon size={20} fill="#979797" />
-          </Button>
-        </Tooltip>
-        <Modal
-          isOpen={isOpen}
-          onOpenChange={onOpenChange}
-          placement="top-center"
-        >
-          <ModalContent>
-            {(onClose) => (
-              <>
-                <ModalHeader className="flex flex-col gap-1">
-                  Update Level
-                </ModalHeader>
-                <ModalBody>
-                  <Input
-                    label="Name_en"
-                    variant="bordered"
-                    value={name_en}
-                    onChange={(e) => setName_en(e.target.value)}
-                  />
-                  <Input
-                    label="Name_ka"
-                    variant="bordered"
-                    value={name_ka}
-                    onChange={(e) => setName_ka(e.target.value)}
-                  />
-                  <Input
-                    label="Description_en"
-                    variant="bordered"
-                    value={description_en}
-                    onChange={(e) => setDescription_en(e.target.value)}
-                  />
-                  <Input
-                    label="Description_ka"
-                    variant="bordered"
-                    value={description_ka}
-                    onChange={(e) => setDescription_ka(e.target.value)}
-                  />
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="danger" variant="flat" onClick={onClose}>
-                    Close
-                  </Button>
-                  <Button
-                    color="primary"
-                    onPress={handlLevelUpdate}
-                    isLoading={isLoading}
-                  >
-                    Save
-                  </Button>
-                </ModalFooter>
-              </>
-            )}
-          </ModalContent>
-        </Modal>
-      </>
+      <Tooltip content="Edit level" color="primary">
+        <Button isIconOnly className="bg-transparent" onPress={onOpen}>
+          <EditIcon size={20} fill="#979797" />
+        </Button>
+      </Tooltip>
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        placement="top-center"
+      >
+        <ModalContent>
+          <form onSubmit={handleLevelUpdate}>
+            <ModalHeader className="flex flex-col gap-1">
+              Update Level
+            </ModalHeader>
+            <ModalBody>
+              <Input
+                label="Name_en"
+                variant="bordered"
+                value={name_en}
+                onChange={(e) => setName_en(e.target.value)}
+              />
+              <Input
+                label="Name_ka"
+                variant="bordered"
+                value={name_ka}
+                onChange={(e) => setName_ka(e.target.value)}
+              />
+              <Input
+                label="Description_en"
+                variant="bordered"
+                value={description_en}
+                onChange={(e) => setDescription_en(e.target.value)}
+              />
+              <Input
+                label="Description_ka"
+                variant="bordered"
+                value={description_ka}
+                onChange={(e) => setDescription_ka(e.target.value)}
+              />
+            </ModalBody>
+            <ModalFooter>
+              <Button color="danger" variant="flat" onClick={onClose}>
+                Close
+              </Button>
+              <Button
+                color="primary"
+                type="submit"
+                isLoading={isLoading}
+              >
+                Save
+              </Button>
+            </ModalFooter>
+          </form>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

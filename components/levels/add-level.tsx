@@ -11,6 +11,7 @@ import {
 import React, { useState } from "react";
 import Levels from "@/app/api/Learn/Level";
 import toast from "react-hot-toast";
+
 interface ApiResponse<T> {
   success: boolean;
   result?: T;
@@ -28,107 +29,89 @@ export const AddLevel = ({ onAddNewLevel }: Props) => {
   const [description_ka, setDescription_ka] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const newLevelData = {
-    levelName_ka: "",
-    levelName_en: "",
-    logoURL: "",
-    description_ka: "",
-    description_en: "",
-  };
+  const handleAddLevel = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-  const sentNewLevelData = {
-    levelId: 0,
-    levelName_ka: name_ka,
-    levelName_en: name_en,
-    logoURL: "",
-    description_ka: description_ka,
-    description_en: description_en,
-  };
-
-  const levelAPI = Levels();
-  const handleAddLevel = async () => {
-    newLevelData.levelName_en = name_en;
-    newLevelData.levelName_ka = name_ka;
-    newLevelData.description_en = description_en;
-    newLevelData.description_ka = description_ka;
+    const newLevelData = {
+      levelName_en: name_en,
+      levelName_ka: name_ka,
+      description_en: description_en,
+      description_ka: description_ka,
+      logoURL: "", // Assuming you have a way to set this
+    };
 
     setIsLoading(true);
-    const response: ApiResponse<any> = (await levelAPI.handleAddLevel(
-      newLevelData
-    )) as ApiResponse<any>;
+    const levelAPI = Levels();
+    const response: ApiResponse<any> = await levelAPI.handleAddLevel(newLevelData) as ApiResponse<any>;
+
+    setIsLoading(false);
+
     if (response.success) {
-      //onLevelDelete(levelId);
-      setIsLoading(false);
-      onClose();
       onAddNewLevel(response.result);
-      toast.success("User deleted successfully");
+      toast.success("Level added successfully");
+      onClose();
     } else {
-      setIsLoading(false);
       toast.error(response.result);
-      console.error("Failed to delete user:", response);
+      console.error("Failed to add level:", response);
     }
   };
 
   return (
     <div>
-      <>
-        <Button onPress={onOpen} color="primary">
-          Add Level
-        </Button>
-        <Modal
-          isOpen={isOpen}
-          onOpenChange={onOpenChange}
-          placement="top-center"
-        >
-          <ModalContent>
-            {(onClose) => (
-              <>
-                <ModalHeader className="flex flex-col gap-1">
-                  Add Level
-                </ModalHeader>
-                <ModalBody>
-                  <Input
-                    label="Name_en"
-                    variant="bordered"
-                    value={name_en}
-                    onChange={(e) => setName_en(e.target.value)}
-                  />
-                  <Input
-                    label="Name_ka"
-                    variant="bordered"
-                    value={name_ka}
-                    onChange={(e) => setName_ka(e.target.value)}
-                  />
-                  <Input
-                    label="Description_en"
-                    variant="bordered"
-                    value={description_en}
-                    onChange={(e) => setDescription_en(e.target.value)}
-                  />
-                  <Input
-                    label="Description_ka"
-                    variant="bordered"
-                    value={description_ka}
-                    onChange={(e) => setDescription_ka(e.target.value)}
-                  />
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="danger" variant="flat" onClick={onClose}>
-                    Close
-                  </Button>
-                  <Button
-                    color="primary"
-                    onPress={handleAddLevel}
-                    isLoading={isLoading}
-                  >
-                    Add Level
-                  </Button>
-                </ModalFooter>
-              </>
-            )}
-          </ModalContent>
-        </Modal>
-      </>
+      <Button onPress={onOpen} color="primary">
+        Add Level
+      </Button>
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        placement="top-center"
+      >
+        <ModalContent>
+          <form onSubmit={handleAddLevel}>
+            <ModalHeader className="flex flex-col gap-1">
+              Add Level
+            </ModalHeader>
+            <ModalBody>
+              <Input
+                label="Name_en"
+                variant="bordered"
+                value={name_en}
+                onChange={(e) => setName_en(e.target.value)}
+              />
+              <Input
+                label="Name_ka"
+                variant="bordered"
+                value={name_ka}
+                onChange={(e) => setName_ka(e.target.value)}
+              />
+              <Input
+                label="Description_en"
+                variant="bordered"
+                value={description_en}
+                onChange={(e) => setDescription_en(e.target.value)}
+              />
+              <Input
+                label="Description_ka"
+                variant="bordered"
+                value={description_ka}
+                onChange={(e) => setDescription_ka(e.target.value)}
+              />
+            </ModalBody>
+            <ModalFooter>
+              <Button color="danger" variant="flat" onClick={onClose}>
+                Close
+              </Button>
+              <Button
+                color="primary"
+                type="submit"
+                isLoading={isLoading}
+              >
+                Add Level
+              </Button>
+            </ModalFooter>
+          </form>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };
