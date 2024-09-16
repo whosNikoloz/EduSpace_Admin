@@ -23,6 +23,11 @@ interface LevelModel {
   courses: [];
 }
 
+interface ApiResponse<T> {
+  status: boolean;
+  result?: T;
+}
+
 export const LevelsIndex = () => {
   const [levels, setLevels] = useState<LevelModel[]>([]);
 
@@ -31,16 +36,18 @@ export const LevelsIndex = () => {
   useEffect(() => {
     const fetchLevels = async () => {
       try {
-        const fetchedLevels = await levelAPi.GetLevel();
-        console.log("22", fetchedLevels);
-        setLevels(fetchedLevels);
+        const statusApi: ApiResponse<any> = await levelAPi.GetLevel();
+        if(statusApi.status){
+          setLevels(statusApi.result);
+        }
+        else if (!statusApi.status) {
+          console.log("Error fetching levels:", statusApi.result);
+        }
       } catch (error) {
         console.error("Error fetching levels:", error);
       }
     };
-
     fetchLevels();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleAddlevel = (newLevel: any) => {

@@ -8,7 +8,7 @@ import {
   getDownloadURL,
   uploadBytesResumable,
 } from "firebase/storage";
-import { getAuthCookie } from "@/actions/auth.action";
+import { deleteAuthCookie, getAuthCookie } from "@/actions/auth.action";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCpTtUB_NqmFfsoccOBozkZ8tMlpzTd0U0",
@@ -51,18 +51,18 @@ const Authentication = () => {
       if (response.ok) {
         const data = await response.json();
 
-        if (data.successful) {
-          return { success: true };
+        if (data.status) {
+          return { status: true };
         } else {
-          return { success: false, result: data.error };
+          return { status: false, result: data.result };
         }
       }
     } catch (error) {
-      console.error("An error occurred during the request:", error);
+      return { status: false, result: error };
     }
   };
 
-  const handleLogin = async (email: any, password: any) => {
+  const handleLogin = async (email: string, password: string) => {
     try {
       const response = await fetch(auth_API + "Email", {
         method: "POST",
@@ -74,32 +74,33 @@ const Authentication = () => {
           password,
         }),
       });
-
+  
       if (response.ok) {
         const data = await response.json();
-
-        if (data.successful) {
+  
+        if (data.status) {
+          const { token, user } = data.result;
           try {
-            console.log(loginContext(data.response.token));
-            if (await loginContext(data.response.token)) {
-              return { success: true };
+            if (await loginContext(token)) {
+              if (user.role === "admin") {
+                return { status: true, user };
+              }
+              return { status: false, result: "This account isn't Admin" };
             }
-            return { success: false, result: "This Accounts isn't Admin" };
+            return { status: false, result: "Login context failed" };
           } catch (error) {
             console.error("Error setting cookies:", error);
+            return { status: false, result: "Error setting cookies" };
           }
         } else {
-          return { success: false, result: data.error };
+          return { status: false, result: data.result };
         }
       } else {
         const errorText = await response.text();
-        // Handle other errors, for example, log the error or display an error message
-        console.error("Error:", errorText);
-        return { success: false, result: "An unexpected error occurred" };
+        return { status: false, result: errorText };
       }
     } catch (error) {
-      window.alert(error);
-      return error;
+      return { status: false, result: error };
     }
   };
 
@@ -119,21 +120,27 @@ const Authentication = () => {
         }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
+      const data = await response.json();
+  
+      if (data.status) {
+        const { token, user } = data.result;
         try {
-          loginContext(data.response.token);
-          return true;
-        } catch (error) {
-          console.error("Error setting cookies:", error);
+          if (await loginContext(token)) {
+            if (user.role === "admin") {
+              return { status: true, user };
+            }
+             return { status: false, result: "This account isn't Admin" };
+            }
+            return { status: false, result: "Login context failed" };
+          } catch (error) {
+            console.error("Error setting cookies:", error);
+            return { status: false, result: "Error setting cookies" };
+          }
+        } else {
+          return { status: false, result: data.result };
         }
-      } else {
-        const errorText = await response.text();
-        return errorText;
-      }
     } catch (error) {
-      window.alert(error);
-      return error;
+      return { status: false, result: error };
     }
   };
 
@@ -149,15 +156,18 @@ const Authentication = () => {
           "Content-Type": "application/json",
         },
       });
-
       if (response.ok) {
-      } else {
-        const errorText = await response.text();
-        return errorText;
+        const data = await response.json();
+        if (data.status) {
+          return { status: true, result: data.result };
+        } else {
+          return { status: false, result: data.result };
+        }
+      }else{
+        return { status: false, result: "An unexpected error occurred" };
       }
     } catch (error) {
-      window.alert(error);
-      return error;
+      return { status: false, result: error };
     }
   };
 
@@ -178,15 +188,19 @@ const Authentication = () => {
           ConfirmPassword,
         }),
       });
-
+      
       if (response.ok) {
-      } else {
-        const errorText = await response.text();
-        return errorText;
+        const data = await response.json();
+        if (data.status) {
+          return { status: true, result: data.result };
+        } else {
+          return { status: false, result: data.result };
+        }
+      }else{
+        return { status: false, result: "An unexpected error occurred" };
       }
     } catch (error) {
-      window.alert(error);
-      return error;
+      return { status: false, result: error };
     }
   };
 
@@ -204,14 +218,16 @@ const Authentication = () => {
 
       if (response.ok) {
         const data = await response.json();
-        if (data.successful) {
-          return { success: true };
+        if (data.status) {
+          return { status: true, result: data.result };
         } else {
-          return { success: false, result: data.error };
+          return { status: false, result: data.result };
         }
+      }else{
+        return { status: false, result: "An unexpected error occurred" };
       }
     } catch (error) {
-      console.error("An error occurred during the request:", error);
+      return { status: false, result: error };
     }
   };
 
@@ -229,15 +245,16 @@ const Authentication = () => {
 
       if (response.ok) {
         const data = await response.json();
-
-        if (data.successful) {
-          return { success: true };
+        if (data.status) {
+          return { status: true, result: data.result };
         } else {
-          return { success: false, result: data.error };
+          return { status: false, result: data.result };
         }
+      }else{
+        return { status: false, result: "An unexpected error occurred" };
       }
     } catch (error) {
-      console.error("An error occurred during the request:", error);
+      return { status: false, result: error };
     }
   };
 
@@ -262,15 +279,18 @@ const Authentication = () => {
       });
 
       if (response.ok) {
-      } else {
-        const errorText = await response.text();
-        console.error("Registration error:", errorText); // Log the error
-        // Display an error message to the user or handle it as needed
-        return errorText;
+        const data = await response.json();
+        if (data.status) {
+          return { status: true, result: data.result };
+        } else {
+          return { status: false, result: data.result };
+        }
+      }else{
+        return { status: false, result: "An unexpected error occurred" };
       }
     } catch (error) {
-      console.error("Registration error:", error); // Log the error
-      return error;
+      return { status: false, result: error };
+
     }
   };
 
@@ -291,9 +311,14 @@ const Authentication = () => {
       });
 
       if (response.ok) {
-        return true;
-      } else {
-        return false;
+        const data = await response.json();
+        if (data.status) {
+          return { status: true, result: data.result };
+        } else {
+          return { status: false, result: data.result };
+        }
+      }else{
+        return { status: false, result: "An unexpected error occurred" };
       }
     } catch (error) {
       console.error("Registration error:", error); // Log the error
@@ -324,16 +349,17 @@ const Authentication = () => {
       });
 
       if (response.ok) {
-        return true;
-      } else {
-        const errorText = await response.text();
-        console.error("Registration error:", errorText); // Log the error
-        // Display an error message to the user or handle it as needed
-        return errorText;
+        const data = await response.json();
+        if (data.status) {
+          return { status: true, result: data.result };
+        } else {
+          return { status: false, result: data.result };
+        }
+      }else{
+        return { status: false, result: "An unexpected error occurred" };
       }
     } catch (error) {
-      console.error("Registration error:", error); // Log the error
-      return error;
+      return { status: false, result: error };
     }
   };
 
@@ -361,13 +387,17 @@ const Authentication = () => {
       });
 
       if (response.ok) {
-      } else {
-        const errorText = await response.text();
-        return errorText;
+        const data = await response.json();
+        if (data.status) {
+          return { status: true, result: data.result };
+        } else {
+          return { status: false, result: data.result };
+        }
+      }else{
+        return { status: false, result: "An unexpected error occurred" };
       }
     } catch (error) {
-      window.alert(error);
-      return error;
+      return { status: false, result: error };
     }
   };
 
@@ -397,15 +427,17 @@ const Authentication = () => {
       });
 
       if (response.ok) {
-        return { success: true, result: "Updated" };
-      } else {
-        const errorText = await response.text();
-        return { success: false, result: errorText };
-        return errorText;
+        const data = await response.json();
+        if (data.status) {
+          return { status: true, result: data.result };
+        } else {
+          return { status: false, result: data.result };
+        }
+      }else{
+        return { status: false, result: "An unexpected error occurred" };
       }
     } catch (error) {
-      window.alert(error);
-      return error;
+      return { status: false, result: error };
     }
   };
 
@@ -425,22 +457,32 @@ const Authentication = () => {
 
       if (response.ok) {
         const data = await response.json();
-        try {
-          localStorage.removeItem("jwt");
-          loginContext(data.token);
-        } catch (error) {
-          console.error("Error setting cookies:", error);
+  
+        if (data.status) {
+          const { token, user } = data.result;
+          try {
+            if (await loginContext(token)) {
+              if (user.role === "admin") {
+                return { status: true, user };
+              }
+              return { status: false, result: "This account isn't Admin" };
+            }
+            return { status: false, result: "Login context failed" };
+          } catch (error) {
+            console.error("Error setting cookies:", error);
+            return { status: false, result: "Error setting cookies" };
+          }
+        } else {
+          return { status: false, result: data.result };
         }
       } else {
         const errorText = await response.text();
-        return errorText;
+        return { status: false, result: errorText };
       }
     } catch (error) {
-      window.alert(error);
-      return error;
+      return { status: false, result: error };
     }
   };
-
   const ReLogin = async (password: string) => {
     try {
       const encodedPassword = encodeURIComponent(password);
@@ -456,13 +498,31 @@ const Authentication = () => {
       });
 
       if (response.ok) {
+        const data = await response.json();
+        if (data.status) {
+          const { token, user } = data.result;
+          try {
+            if (await loginContext(token)) {
+              if (user.role === "admin") {
+                return { status: true, user };
+              }
+              return { status: false, result: "This account isn't Admin" };
+            }
+            return { status: false, result: "Login context failed" };
+          } catch (error) {
+            console.error("Error setting cookies:", error);
+            return { status: false, result: "Error setting cookies" };
+          }
+        } else {
+          return { status: false, result: data.result };
+        }
       } else {
         const errorText = await response.text();
-        return errorText;
+        return { status: false, result: errorText };
       }
     } catch (error) {
-      window.alert(error);
-      return error;
+      return { status: false, result: error };
+
     }
   };
 
@@ -481,15 +541,19 @@ const Authentication = () => {
       });
 
       if (response.ok) {
-        const verificationCode = await response.text();
-        return { ok: true, data: verificationCode };
+        const data = await response.json();
+        if (data.status) {
+          return { status: true, result: data.result };
+        } else {
+          return { status: false, result: data.result };
+        }
       } else {
         const errorText = await response.text();
-        return { ok: false, error: errorText };
+        return { status: false, result: errorText };
       }
     } catch (error) {
-      window.alert(error);
-      return error;
+      return { status: false, result: error };
+
     }
   };
 
@@ -508,14 +572,19 @@ const Authentication = () => {
       });
 
       if (response.ok) {
-        return;
+        const data = await response.json();
+        if (data.status) {
+          return { status: true, result: data.result };
+        } else {
+          return { status: false, result: data.result };
+        }
       } else {
         const errorText = await response.text();
         return errorText;
       }
     } catch (error) {
-      window.alert(error);
-      return error;
+      return { status: false, result: error };
+
     }
   };
 
@@ -552,14 +621,18 @@ const Authentication = () => {
       });
 
       if (response.ok) {
-        return;
+        const data = await response.json();
+        if (data.status) {
+          return { status: true, result: data.result };
+        } else {
+          return { status: false, result: data.result };
+        }
       } else {
-        const errorText = await response.text();
-        return errorText;
+        return { status: false, result: "An unexpected error occurred" };
       }
     } catch (error) {
-      window.alert(error);
-      return error;
+      return { status: false, result: error };
+
     }
   };
 
@@ -589,7 +662,7 @@ const Authentication = () => {
           },
           async () => {
             try {
-              // Upload completed successfully, get the download URL.
+              // Upload completed statusly, get the download URL.
               const downloadURL = await getDownloadURL(fileRef);
               resolve(downloadURL);
             } catch (error) {
@@ -641,14 +714,13 @@ const Authentication = () => {
       });
       if (response.ok) {
         const data: UserModel[] = await response.json(); // Assuming the API returns an array of users
-        return { success: true, result: data };
+        return { status: true, result: data };
       } else {
         const errorText = await response.text();
-        return { success: false, result: errorText };
+        return { status: false, result: errorText };
       }
     } catch (error) {
-      window.alert(error);
-      return error;
+      return { status: false, result: error };
     }
   };
 
@@ -663,14 +735,18 @@ const Authentication = () => {
         },
       });
       if (response.ok) {
-        return { success: true };
+        const data = await response.json();
+        if (data.status) {
+          return { status: true, result: data.result };
+        } else {
+          return { status: false, result: data.result };
+        }
       } else {
         const errorText = await response.text();
-        return { success: false, result: errorText };
+        return { status: false, result: errorText };
       }
     } catch (error) {
-      window.alert(error);
-      return error;
+      return { status: false, result: error };
     }
   };
 

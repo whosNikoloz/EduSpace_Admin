@@ -10,9 +10,8 @@ import { Spinner } from "@nextui-org/spinner";
 import { useTranslations } from "@/actions/localisation";
 
 interface ApiResponse {
-  success: boolean;
-  result?: string;
-  error?: string;
+  status: boolean;
+  result: string;
 }
 
 export default function Login({ lang }: { lang: Locale }) {
@@ -52,8 +51,8 @@ export default function Login({ lang }: { lang: Locale }) {
       setEmailLogHasBlurred(true);
       setLogLoader(true);
       const response = (await auth.checkEmailLogin(email)) as ApiResponse;
-      if (!response.success) {
-        setLoginEmailError(response.result || "Email doesnot exists");
+      if (!response.status) {
+        setLoginEmailError(response.result);
         setEmailLogHasBlurred(false);
       } else {
         setLogLoader(false);
@@ -72,8 +71,8 @@ export default function Login({ lang }: { lang: Locale }) {
     try {
       const response = (await auth.handleLogin(email, password)) as ApiResponse;
 
-      if (!response.success) {
-        setLoginError(response.result || translations.loginError);
+      if (!response.status) {
+        setLoginError(response.result);
       } else {
         const redirectUrl = sessionStorage.getItem("redirect_url");
         sessionStorage.removeItem("redirect_url");

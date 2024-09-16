@@ -29,7 +29,7 @@ interface Props {
 }
 
 interface ApiResponse<T> {
-  success: boolean;
+  status: boolean;
   result?: T;
 }
 
@@ -60,7 +60,7 @@ export const EditLevel = ({ onUpdateLevel, level }: Props) => {
       level.levelId,
       newLevelData
     )) as ApiResponse<any>;
-    if (response.success) {
+    if (response.status) {
       setIsLoading(false);
       onClose();
       onUpdateLevel(response.result);

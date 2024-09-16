@@ -21,4 +21,5 @@ interface UserModel {
   comments: any | null;
   progresses: any | null;
   lastActivity: string;
+  plan: string | null;
 }

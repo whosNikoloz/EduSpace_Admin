@@ -24,6 +24,7 @@ class User {
   role: string;
   oauth: string;
   joinedAt: string;
+  plan: string | null;
 
   constructor(
     userId: number,
@@ -35,7 +36,8 @@ class User {
     phoneNumber: string,
     role: string,
     oauth: string,
-    joinedAt: string
+    joinedAt: string,
+    plan: string
   ) {
     this.userId = userId;
     this.userName = userName;
@@ -47,6 +49,7 @@ class User {
     this.role = role;
     this.oauth = oauth;
     this.joinedAt = joinedAt;
+    this.plan = plan;
   }
 }
 
@@ -105,6 +108,7 @@ const EncodeJwtIntoUser = (userToken: string) => {
     ],
     oauth: decodedToken["Oauth"],
     joinedAt: decodedToken["joinedAt"],
+    plan: decodedToken["Plan"],
   };
   return userData;
 };

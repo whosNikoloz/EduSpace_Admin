@@ -27,6 +27,11 @@ interface Props {
   lang: Locale;
 }
 
+interface ApiResponse<T> {
+  status: boolean;
+  result?: T;
+}
+
 export const SidebarWrapper = ({ lang }: Props) => {
   const pathname = usePathname();
   const { collapsed, setCollapsed } = useSidebarContext();
@@ -38,7 +43,12 @@ export const SidebarWrapper = ({ lang }: Props) => {
   useEffect(() => {
     const fetchLevels = async () => {
       try {
-        const fetchedLevels = await levelAPi.GetLevel();
+        const fetchedLevelsStatus : ApiResponse<any> = await levelAPi.GetLevel();
+        if(!fetchedLevelsStatus.status){
+          console.log("Error fetching levels:", fetchedLevelsStatus.result);
+          return;
+        }
+        const fetchedLevels = fetchedLevelsStatus.result;
         const levelNames = fetchedLevels.map(
           (level: any) => level.levelName_en
         );

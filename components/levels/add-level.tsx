@@ -13,7 +13,7 @@ import Levels from "@/app/api/Learn/Level";
 import toast from "react-hot-toast";
 
 interface ApiResponse<T> {
-  success: boolean;
+  status: boolean;
   result?: T;
 }
 
@@ -46,7 +46,7 @@ export const AddLevel = ({ onAddNewLevel }: Props) => {
 
     setIsLoading(false);
 
-    if (response.success) {
+    if (response.status) {
       onAddNewLevel(response.result);
       toast.success("Level added successfully");
       onClose();

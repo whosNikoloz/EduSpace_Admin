@@ -20,7 +20,7 @@ interface Props {
   onUserDelete: (userId: number) => void;
 }
 interface ApiResponse<T> {
-  success: boolean;
+  status: boolean;
   result?: T;
 }
 
@@ -37,7 +37,7 @@ export const DeleteUser = ({ userId, onUserDelete }: Props) => {
     const response: ApiResponse<any> = (await auth.handleRemoveUser(
       userId
     )) as ApiResponse<any>;
-    if (response.success) {
+    if (response.status) {
       onUserDelete(userId);
       setIsLoading(false);
       setIsOpen(false);

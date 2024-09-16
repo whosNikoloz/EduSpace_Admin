@@ -14,7 +14,7 @@ import Authentication from "@/app/api/User/auth"; // Ensure this is exported cor
 
 // Define the response type from the API
 interface ApiResponse<T> {
-  success: boolean;
+  status: boolean;
   result?: T;
 }
 
@@ -33,7 +33,7 @@ const fetchUsers = async (
 ) => {
   try {
     const response = await getUsers();
-    if (response.success && Array.isArray(response.result)) {
+    if (response.status && Array.isArray(response.result)) {
       return response.result;
     } else {
       console.error("Failed to fetch users:", response);

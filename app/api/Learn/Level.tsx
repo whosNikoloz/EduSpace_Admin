@@ -1,16 +1,15 @@
 import { getAuthCookie } from "@/actions/auth.action";
 
-const learn_API = "https://localhost:44336/api/v1/Learn/Levels/";
-const learn_API_NIkoloza = "https://172.20.10.7:45455/api/v1/Learn/";
-const docker_API = "https://185.139.57.56:8081/api/v1/Learn/";
-
-const learn_conveyAPI = "https://othergreencat21.conveyor.cloud/api/v1/Learn/";
+const learn_API = "https://localhost:44336/api/v1/";
+// const learn_API_NIkoloza = "https://172.20.10.7:45455/api/v1/Learn/";
+// const docker_API = "https://185.139.57.56:8081/api/v1/Learn/";
+// const learn_conveyAPI = "https://othergreencat21.conveyor.cloud/api/v1/Learn/";
 
 const Levels = () => {
   const GetLevel = async () => {
     try {
       const apiUrl = learn_API;
-      const response = await fetch(apiUrl, {
+      const response = await fetch(apiUrl + "levels", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -18,23 +17,25 @@ const Levels = () => {
       });
 
       if (response.ok) {
-        const levels = await response.json();
-        return levels;
+        const data = await response.json();
+        if (data.status) {
+          return { status: true, result: data.result };
+        } else {
+          return { status: false, result: data.result };
+        }
       } else {
         const errorText = await response.text();
-        console.error("Levels Get:", errorText);
-        return errorText;
+        return { status: false, result: errorText };
       }
     } catch (error) {
-      console.error("Levels Get error:", error); // Log the error
-      return error;
+      return { status: false, result: error };
     }
   };
 
   const handleRemoveLevel = async (levelId: number) => {
     try {
       const token = await getAuthCookie();
-      const response = await fetch(learn_API + levelId, {
+      const response = await fetch(learn_API + "level/" + levelId, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -42,21 +43,24 @@ const Levels = () => {
         },
       });
       if (response.ok) {
-        return { success: true };
+        const data = await response.json();
+        if (data.status) {
+          return { status: true, result: data.result };
+        }
+        return { status: false, result: data.result };
       } else {
         const errorText = await response.text();
-        return { success: false, result: errorText };
+        return { status: false, result: errorText };
       }
     } catch (error) {
-      window.alert(error);
-      return error;
+      return { status: false, result: error };
     }
   };
 
   const handleUpdateLevel = async (levelId: number, data: any) => {
     try {
       const token = await getAuthCookie();
-      const response = await fetch(learn_API + levelId, {
+      const response = await fetch(learn_API + "level/" + levelId, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -68,29 +72,27 @@ const Levels = () => {
       if (response.ok) {
         const responseData = await response.json();
 
-        if (responseData.successful) {
-          return { success: true, result: responseData.level };
+        if (responseData.status) {
+          return { success: true, result: responseData.result };
         } else {
-          console.error("Unsuccessful response:", responseData);
           return {
-            success: false,
-            result: responseData.error || "Unknown error",
+            status: false,
+            result: responseData.error,
           };
         }
       } else {
         const errorText = await response.text();
-        return { success: false, result: errorText };
+        return { status: false, result: errorText };
       }
     } catch (error) {
-      console.error("Error while updating level:", error);
-      return { success: false, error };
+      return { status: false, error };
     }
   };
 
   const handleAddLevel = async (levelData: any) => {
     try {
       const token = await getAuthCookie();
-      const response = await fetch(learn_API, {
+      const response = await fetch(learn_API + "level/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -102,23 +104,17 @@ const Levels = () => {
       if (response.ok) {
         const responseData = await response.json();
 
-        if (responseData.successful) {
-          try {
-            return { success: true, result: responseData.level };
-          } catch (error) {
-            console.error("Error setting Level:", error);
-            return { success: false, error: "Error setting level" };
-          }
+        if (responseData.status) {
+          return { status: true, result: responseData.result };
         } else {
-          console.error("Unsuccessful response:", responseData);
           return {
-            success: false,
-            result: responseData.error || "Unknown error",
+            status: false,
+            result: responseData.error,
           };
         }
       } else {
         const errorText = await response.text(); // Extract error details
-        return { success: false, result: errorText }; // Return the error details
+        return { status: false, result: errorText }; // Return the error details
       }
     } catch (error) {
       console.error("Error while adding level:", error);

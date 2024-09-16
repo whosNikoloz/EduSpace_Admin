@@ -20,7 +20,7 @@ interface Props {
   onLevelDelete: (levelId: number) => void;
 }
 interface ApiResponse<T> {
-  success: boolean;
+  status: boolean;
   result?: T;
 }
 
@@ -37,7 +37,7 @@ export const DeleteLevel = ({ levelId, onLevelDelete }: Props) => {
     const response: ApiResponse<any> = (await levelAPi.handleRemoveLevel(
       levelId
     )) as ApiResponse<any>;
-    if (response.success) {
+    if (response.status) {
       onLevelDelete(levelId);
       setIsLoading(false);
       setIsOpen(false);

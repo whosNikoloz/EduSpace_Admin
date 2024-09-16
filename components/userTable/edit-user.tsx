@@ -20,7 +20,7 @@ interface Props {
 }
 
 interface ApiResponse<T> {
-  success: boolean;
+  status: boolean;
   result?: T;
 }
 
@@ -59,7 +59,7 @@ export const Edituser = ({ onUpdateUser, user }: Props) => {
       phone ?? ""
     )) as ApiResponse<any>;
     ``;
-    if (response.success) {
+    if (response.status) {
       setIsLoading(false);
       onClose();
       const updatedUser = {
