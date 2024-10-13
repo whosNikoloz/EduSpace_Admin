@@ -32,27 +32,33 @@ interface ApiResponse<T> {
   result?: T;
 }
 
+interface levelModel {
+  levelId: number;
+  levelName_ka: string;
+  levelName_en: string;
+  logoURL: string;
+  description_ka: string;
+  description_en: string;
+}
+
 export const SidebarWrapper = ({ lang }: Props) => {
   const pathname = usePathname();
   const { collapsed, setCollapsed } = useSidebarContext();
   const translations = useTranslations(lang, "SideBar");
 
   const levelAPi = Levels();
-  const [levels, setLevels] = useState<string[]>([]);
+  const [levels, setLevels] = useState<levelModel[]>([]);
 
   useEffect(() => {
     const fetchLevels = async () => {
       try {
-        const fetchedLevelsStatus : ApiResponse<any> = await levelAPi.GetLevel();
-        if(!fetchedLevelsStatus.status){
+        const fetchedLevelsStatus: ApiResponse<any> = await levelAPi.GetLevel();
+        if (!fetchedLevelsStatus.status) {
           console.log("Error fetching levels:", fetchedLevelsStatus.result);
           return;
         }
         const fetchedLevels = fetchedLevelsStatus.result;
-        const levelNames = fetchedLevels.map(
-          (level: any) => level.levelName_en
-        );
-        setLevels(levelNames);
+        setLevels(fetchedLevels);
       } catch (error) {
         console.error("Error fetching levels:", error);
       }
@@ -99,11 +105,6 @@ export const SidebarWrapper = ({ lang }: Props) => {
                 title={translations.payements}
                 icon={<PaymentsIcon />}
               />
-              <CollapseItems
-                icon={<BalanceIcon />}
-                items={["Banks Accounts", "Credit Cards", "Loans"]}
-                title={translations.balances}
-              />
               <SidebarItem
                 isActive={pathname === "/customers"}
                 title={translations.customers}
@@ -120,7 +121,10 @@ export const SidebarWrapper = ({ lang }: Props) => {
               />
               <CollapseItems
                 icon={<CourseIcon />}
-                items={levels}
+                items={levels.map((level, index) => ({
+                  id: level.levelId,
+                  name: lang === "en" ? level.levelName_en : level.levelName_ka,
+                }))}
                 title={translations.courses}
               />
             </SidebarMenu>

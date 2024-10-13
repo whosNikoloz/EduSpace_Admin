@@ -23,22 +23,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
-const auth_API = "https://localhost:44336/api/V1/Auth/";
-const base_API = "https://localhost:44336/api/V1/";
-const user_API = "https://localhost:44336/api/V1/User/";
-
-const docker_auth_API = "https://185.139.57.56:8081/api/v1/Auth/";
-const docker_user_API = "https://185.139.57.56:8081/api/v1/User/";
-
-const auth_conveyAPI = "https://fungreenlamp23.conveyor.cloud/api/v1/Auth/";
-const user_conveyAPI = "https://fungreenlamp23.conveyor.cloud/api/v1/User/";
+let serverUrl = process.env.NEXT_PUBLIC_API_URL;
 
 const Authentication = () => {
   const { login: loginContext } = useUser();
 
   const checkEmailLogin = async (email: string) => {
     try {
-      const response = await fetch(auth_API + "Login/check-email", {
+      const response = await fetch(serverUrl + "Auth/Login/check-email", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,7 +56,7 @@ const Authentication = () => {
 
   const handleLogin = async (email: string, password: string) => {
     try {
-      const response = await fetch(auth_API + "Email", {
+      const response = await fetch(serverUrl + "Auth/Email", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -74,10 +66,10 @@ const Authentication = () => {
           password,
         }),
       });
-  
+
       if (response.ok) {
         const data = await response.json();
-  
+
         if (data.status) {
           const { token, user } = data.result;
           try {
@@ -109,7 +101,7 @@ const Authentication = () => {
     oAuthproviderId: string
   ) => {
     try {
-      const response = await fetch(auth_API + "OAuthEmail", {
+      const response = await fetch(serverUrl + "Auth/OAuthEmail", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -121,7 +113,7 @@ const Authentication = () => {
       });
 
       const data = await response.json();
-  
+
       if (data.status) {
         const { token, user } = data.result;
         try {
@@ -129,16 +121,16 @@ const Authentication = () => {
             if (user.role === "admin") {
               return { status: true, user };
             }
-             return { status: false, result: "This account isn't Admin" };
-            }
-            return { status: false, result: "Login context failed" };
-          } catch (error) {
-            console.error("Error setting cookies:", error);
-            return { status: false, result: "Error setting cookies" };
+            return { status: false, result: "This account isn't Admin" };
           }
-        } else {
-          return { status: false, result: data.result };
+          return { status: false, result: "Login context failed" };
+        } catch (error) {
+          console.error("Error setting cookies:", error);
+          return { status: false, result: "Error setting cookies" };
         }
+      } else {
+        return { status: false, result: data.result };
+      }
     } catch (error) {
       return { status: false, result: error };
     }
@@ -146,7 +138,7 @@ const Authentication = () => {
 
   const handleForgotPassword = async (email: string) => {
     try {
-      const apiUrl = `${user_API}ForgotPassword?email=${encodeURIComponent(
+      const apiUrl = `${serverUrl}User/ForgotPassword?email=${encodeURIComponent(
         email
       )}`;
 
@@ -163,7 +155,7 @@ const Authentication = () => {
         } else {
           return { status: false, result: data.result };
         }
-      }else{
+      } else {
         return { status: false, result: "An unexpected error occurred" };
       }
     } catch (error) {
@@ -177,7 +169,7 @@ const Authentication = () => {
     ConfirmPassword: string
   ) => {
     try {
-      const response = await fetch(user_API + "ResetPassword", {
+      const response = await fetch(serverUrl + "User/ResetPassword", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -188,7 +180,7 @@ const Authentication = () => {
           ConfirmPassword,
         }),
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         if (data.status) {
@@ -196,7 +188,7 @@ const Authentication = () => {
         } else {
           return { status: false, result: data.result };
         }
-      }else{
+      } else {
         return { status: false, result: "An unexpected error occurred" };
       }
     } catch (error) {
@@ -206,7 +198,7 @@ const Authentication = () => {
 
   const checkEmailRegister = async (email: string) => {
     try {
-      const response = await fetch(auth_API + "Register/check-email", {
+      const response = await fetch(serverUrl + "Auth/Register/check-email", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -223,7 +215,7 @@ const Authentication = () => {
         } else {
           return { status: false, result: data.result };
         }
-      }else{
+      } else {
         return { status: false, result: "An unexpected error occurred" };
       }
     } catch (error) {
@@ -234,7 +226,7 @@ const Authentication = () => {
   const checkUserNameRegister = async (username: string) => {
     try {
       const response = await fetch(
-        auth_API + "Register/check-username/" + username,
+        serverUrl + "Auth/Register/check-username/" + username,
         {
           method: "GET",
           headers: {
@@ -250,7 +242,7 @@ const Authentication = () => {
         } else {
           return { status: false, result: data.result };
         }
-      }else{
+      } else {
         return { status: false, result: "An unexpected error occurred" };
       }
     } catch (error) {
@@ -265,7 +257,7 @@ const Authentication = () => {
     confirmPassword: string
   ) => {
     try {
-      const response = await fetch(auth_API + "Register", {
+      const response = await fetch(serverUrl + "Auth/Register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -285,12 +277,11 @@ const Authentication = () => {
         } else {
           return { status: false, result: data.result };
         }
-      }else{
+      } else {
         return { status: false, result: "An unexpected error occurred" };
       }
     } catch (error) {
       return { status: false, result: error };
-
     }
   };
 
@@ -299,7 +290,7 @@ const Authentication = () => {
     oAuthProviderId: string
   ) => {
     try {
-      const response = await fetch(auth_API + "OAuth2Exist", {
+      const response = await fetch(serverUrl + "Auth/OAuth2Exist", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -317,7 +308,7 @@ const Authentication = () => {
         } else {
           return { status: false, result: data.result };
         }
-      }else{
+      } else {
         return { status: false, result: "An unexpected error occurred" };
       }
     } catch (error) {
@@ -334,7 +325,7 @@ const Authentication = () => {
     oAuthProviderId: string
   ) => {
     try {
-      const response = await fetch(auth_API + "RegisterOAuth2", {
+      const response = await fetch(serverUrl + "Auth/RegisterOAuth2", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -355,7 +346,7 @@ const Authentication = () => {
         } else {
           return { status: false, result: data.result };
         }
-      }else{
+      } else {
         return { status: false, result: "An unexpected error occurred" };
       }
     } catch (error) {
@@ -371,7 +362,7 @@ const Authentication = () => {
   ) => {
     try {
       const token = await getAuthCookie();
-      const response = await fetch(user_API + "ChangePassword", {
+      const response = await fetch(serverUrl + "User/ChangePassword", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -393,7 +384,7 @@ const Authentication = () => {
         } else {
           return { status: false, result: data.result };
         }
-      }else{
+      } else {
         return { status: false, result: "An unexpected error occurred" };
       }
     } catch (error) {
@@ -410,7 +401,7 @@ const Authentication = () => {
   ) => {
     try {
       const token = await getAuthCookie();
-      const response = await fetch(user_API + "ChangeGeneral", {
+      const response = await fetch(serverUrl + "User/ChangeGeneral", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -433,7 +424,7 @@ const Authentication = () => {
         } else {
           return { status: false, result: data.result };
         }
-      }else{
+      } else {
         return { status: false, result: "An unexpected error occurred" };
       }
     } catch (error) {
@@ -443,7 +434,7 @@ const Authentication = () => {
 
   const UpdatedUser = async (userid: number) => {
     try {
-      const apiUrl = `${user_API}${userid}`; // Construct the URL with query parameters
+      const apiUrl = `${serverUrl}+"User/"${userid}`; // Construct the URL with query parameters
 
       const token = await getAuthCookie();
       const response = await fetch(apiUrl, {
@@ -457,7 +448,7 @@ const Authentication = () => {
 
       if (response.ok) {
         const data = await response.json();
-  
+
         if (data.status) {
           const { token, user } = data.result;
           try {
@@ -486,7 +477,7 @@ const Authentication = () => {
   const ReLogin = async (password: string) => {
     try {
       const encodedPassword = encodeURIComponent(password);
-      const apiUrl = `${user_API}ReLogin/${encodedPassword}`; // Construct the URL with query parameters
+      const apiUrl = `${serverUrl}User/ReLogin/${encodedPassword}`; // Construct the URL with query parameters
       const token = await getAuthCookie();
       const response = await fetch(apiUrl, {
         method: "GET",
@@ -522,14 +513,13 @@ const Authentication = () => {
       }
     } catch (error) {
       return { status: false, result: error };
-
     }
   };
 
   const ChangeEmailRequest = async (email: string) => {
     try {
       const encodedPassword = encodeURIComponent(email);
-      const apiUrl = `${user_API}ChangeEmailRequest/${encodedPassword}`; // Construct the URL with query parameters
+      const apiUrl = `${serverUrl}User/ChangeEmailRequest/${encodedPassword}`; // Construct the URL with query parameters
       const token = await getAuthCookie();
       const response = await fetch(apiUrl, {
         method: "POST",
@@ -553,14 +543,13 @@ const Authentication = () => {
       }
     } catch (error) {
       return { status: false, result: error };
-
     }
   };
 
   const ChangeEmail = async (email: string) => {
     try {
       const encodedPassword = encodeURIComponent(email);
-      const apiUrl = `${user_API}ChangeEmail/${encodedPassword}`; // Construct the URL with query parameters
+      const apiUrl = `${serverUrl}User/ChangeEmail/${encodedPassword}`; // Construct the URL with query parameters
       const token = await getAuthCookie();
       const response = await fetch(apiUrl, {
         method: "POST",
@@ -584,7 +573,6 @@ const Authentication = () => {
       }
     } catch (error) {
       return { status: false, result: error };
-
     }
   };
 
@@ -607,7 +595,7 @@ const Authentication = () => {
         : null;
 
       const token = await getAuthCookie();
-      const response = await fetch(user_API + "UploadImage", {
+      const response = await fetch(serverUrl + "User/UploadImage", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -632,7 +620,6 @@ const Authentication = () => {
       }
     } catch (error) {
       return { status: false, result: error };
-
     }
   };
 
@@ -705,7 +692,7 @@ const Authentication = () => {
   const getUsers = async () => {
     try {
       const token = await getAuthCookie();
-      const response = await fetch(base_API + "Users", {
+      const response = await fetch(serverUrl + "Users", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -727,7 +714,7 @@ const Authentication = () => {
   const handleRemoveUser = async (userId: number) => {
     try {
       const token = await getAuthCookie();
-      const response = await fetch(user_API + userId, {
+      const response = await fetch(serverUrl + "User/" + userId, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

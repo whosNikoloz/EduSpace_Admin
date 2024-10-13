@@ -36,7 +36,6 @@ const fetchUsers = async (
     if (response.status && Array.isArray(response.result)) {
       return response.result;
     } else {
-      console.error("Failed to fetch users:", response);
       return [];
     }
   } catch (error) {

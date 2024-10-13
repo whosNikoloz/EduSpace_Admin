@@ -8,19 +8,20 @@ import { TrashIcon } from "@/components/icons/accounts/trash-icon";
 import { HouseIcon } from "@/components/icons/breadcrumb/house-icon";
 import { UsersIcon } from "@/components/icons/breadcrumb/users-icon";
 import { SettingsIcon } from "@/components/icons/sidebar/settings-icon";
-import { TableWrapper } from "@/components/levelTable/table";
-import { AddLevel } from "./add-level";
+import { TableWrapper } from "@/components/courseTable/table";
+import { AddCourse } from "./add-course";
 import { Toaster } from "react-hot-toast";
-import Levels from "@/app/api/Learn/Level";
+import Courses from "@/app/api/Learn/Course";
 
-interface LevelModel {
-  levelId: number;
-  levelName_ka: string;
-  levelName_en: string;
-  logoURL: string;
+interface CourseModel {
+  courseId: number;
+  courseName_ka: string;
+  courseName_en: string;
+  formattedCourseName: string;
+  courseLogo: string;
   description_ka: string;
   description_en: string;
-  courses: [];
+  subjects: [];
 }
 
 interface ApiResponse<T> {
@@ -28,41 +29,49 @@ interface ApiResponse<T> {
   result?: T;
 }
 
-export const LevelsIndex = () => {
-  const [levels, setLevels] = useState<LevelModel[]>([]);
+interface Props {
+  levelid: number;
+}
 
-  const levelAPi = Levels();
+export const CoursesIndex = ({ levelid }: Props) => {
+  const [courses, setCourses] = useState<CourseModel[]>([]);
+
+  const CourseAPi = Courses();
 
   useEffect(() => {
-    const fetchLevels = async () => {
+    const fetchCourses = async () => {
       try {
-        const statusApi: ApiResponse<any> = await levelAPi.GetLevel();
+        const statusApi: ApiResponse<any> = await CourseAPi.GetCoursesByLevelId(
+          levelid
+        );
         if (statusApi.status) {
-          setLevels(statusApi.result);
+          setCourses(statusApi.result);
+          console.log(statusApi.result);
         } else if (!statusApi.status) {
-          console.log("Error fetching levels:", statusApi.result);
+          console.log("Error fetching Courses:", statusApi.result);
         }
       } catch (error) {
-        console.error("Error fetching levels:", error);
+        console.error("Error fetching Courses:", error);
       }
     };
-    fetchLevels();
+    fetchCourses();
   }, []);
 
-  const handleAddlevel = (newLevel: any) => {
-    setLevels((prevLevels) => [...prevLevels, newLevel]);
+  const handleAddCourse = (newCourse: any) => {
+    newCourse.subjects = [];
+    setCourses((prevCourses) => [...prevCourses, newCourse]);
   };
 
-  const handleLevelDelete = (levelId: number) => {
-    setLevels((prevLevels) =>
-      prevLevels.filter((level) => level.levelId !== levelId)
+  const handleCourseDelete = (courseId: number) => {
+    setCourses((prevCourses) =>
+      prevCourses.filter((course) => course.courseId !== courseId)
     );
   };
 
-  const hanldeLevelEdit = (updatedLevel: LevelModel) => {
-    setLevels((prevLevels) =>
-      prevLevels.map((level) =>
-        level.levelId === updatedLevel.levelId ? updatedLevel : level
+  const hanldeCourseEdit = (updatedCourse: CourseModel) => {
+    setCourses((prevCourses) =>
+      prevCourses.map((Course) =>
+        Course.courseId === updatedCourse.courseId ? updatedCourse : Course
       )
     );
   };
@@ -79,7 +88,7 @@ export const LevelsIndex = () => {
 
         <li className="flex gap-2">
           <UsersIcon />
-          <span>Levels</span>
+          <span>Courses</span>
           <span> / </span>{" "}
         </li>
         <li className="flex gap-2">
@@ -87,7 +96,7 @@ export const LevelsIndex = () => {
         </li>
       </ul>
 
-      <h3 className="text-xl font-semibold">All Levels</h3>
+      <h3 className="text-xl font-semibold">All Courses</h3>
       <div className="flex justify-between flex-wrap gap-4 items-center">
         <div className="flex items-center gap-3 flex-wrap md:flex-nowrap">
           <Input
@@ -103,14 +112,14 @@ export const LevelsIndex = () => {
           <DotsIcon />
         </div>
         <div className="flex flex-row gap-3.5 flex-wrap">
-          <AddLevel onAddNewLevel={handleAddlevel} />
+          <AddCourse onAddNewCourse={handleAddCourse} levelid={levelid} />
         </div>
       </div>
       <div className="max-w-[95rem] mx-auto w-full">
         <TableWrapper
-          levels={levels}
-          onDeleteLevel={handleLevelDelete}
-          onUpdateLevel={hanldeLevelEdit}
+          Courses={courses}
+          onUpdateCourse={hanldeCourseEdit}
+          onDeleteCourse={handleCourseDelete}
         />
       </div>
       <Toaster position="bottom-right" />

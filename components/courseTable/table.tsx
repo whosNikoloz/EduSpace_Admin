@@ -10,51 +10,54 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/react";
-import { RenderLevelCell } from "./render-cell";
+import Courses from "@/app/api/Learn/Course";
+import { RenderCourseCell } from "./render-cell";
 
 const columns = [
   { name: "NAME_EN", uid: "name_en" },
   { name: "NAME_KA", uid: "name_ka" },
+  { name: "FORMATED NAME", uid: "f_name" },
   { name: "DESCRIPTION_EN", uid: "description_en" },
   { name: "DESCRIPTION_KA", uid: "description_ka" },
-  { name: "COURSES", uid: "courses" },
+  { name: "SUBJECTS", uid: "subjects" },
   { name: "ACTIONS", uid: "actions" },
 ];
 
-interface LevelModel {
-  levelId: number;
-  levelName_ka: string;
-  levelName_en: string;
-  logoURL: string;
+interface CourseModel {
+  courseId: number;
+  courseName_ka: string;
+  courseName_en: string;
+  formattedCourseName: string;
+  courseLogo: string;
   description_ka: string;
   description_en: string;
-  courses: [];
+  subjects: [];
 }
 interface Props {
-  levels: LevelModel[];
-  onDeleteLevel: (levelid: number) => void;
-  onUpdateLevel: (newLevel: LevelModel) => void;
+  Courses: CourseModel[];
+  onDeleteCourse: (courseId: number) => void;
+  onUpdateCourse: (updatedCourse: CourseModel) => void;
 }
 
 export const TableWrapper = ({
-  levels,
-  onDeleteLevel,
-  onUpdateLevel,
+  Courses,
+  onDeleteCourse,
+  onUpdateCourse,
 }: Props) => {
-  const [locallevels, setLevels] = useState<LevelModel[]>(levels);
+  const [localCourses, setCourses] = useState<CourseModel[]>(Courses);
   useEffect(() => {
-    setLevels(levels);
-  }, [levels]);
+    setCourses(Courses);
+  }, [Courses]);
 
-  const handleLevelDelete = (levelId: number) => {
-    onDeleteLevel(levelId);
+  const handleCourseDelete = (courseId: number) => {
+    onDeleteCourse(courseId);
   };
 
-  const hanldeLevelEdit = (updatedLevel: LevelModel) => {
-    onUpdateLevel(updatedLevel);
+  const hanldeCourseEdit = (updatedCourse: CourseModel) => {
+    onUpdateCourse(updatedCourse);
   };
 
-  if (levels.length === 0) {
+  if (Courses.length === 0) {
     <Spinner />;
   }
 
@@ -72,16 +75,16 @@ export const TableWrapper = ({
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={locallevels}>
-          {(level) => (
-            <TableRow key={level.levelId}>
+        <TableBody items={localCourses}>
+          {(Course) => (
+            <TableRow key={Course.courseId}>
               {columns.map((column) => (
                 <TableCell key={column.uid}>
-                  {RenderLevelCell({
-                    level: level, // Pass the level instead of user
+                  {RenderCourseCell({
+                    Course: Course, // Pass the Course instead of user
                     columnKey: column.uid,
-                    onLevelDelete: handleLevelDelete, // Correct function name
-                    onLevelEdit: hanldeLevelEdit, // Correct function name
+                    onCourseDelete: handleCourseDelete, // Correct function name
+                    onCourseEdit: hanldeCourseEdit, // Correct function name
                   })}
                 </TableCell>
               ))}
