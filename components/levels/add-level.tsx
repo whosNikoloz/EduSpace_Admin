@@ -11,6 +11,7 @@ import {
 import React, { useState } from "react";
 import Levels from "@/app/api/Learn/Level";
 import toast from "react-hot-toast";
+import { PlusIcon } from "../icons/plus-icon";
 
 interface ApiResponse<T> {
   status: boolean;
@@ -42,7 +43,9 @@ export const AddLevel = ({ onAddNewLevel }: Props) => {
 
     setIsLoading(true);
     const levelAPI = Levels();
-    const response: ApiResponse<any> = await levelAPI.handleAddLevel(newLevelData) as ApiResponse<any>;
+    const response: ApiResponse<any> = (await levelAPI.handleAddLevel(
+      newLevelData
+    )) as ApiResponse<any>;
 
     setIsLoading(false);
 
@@ -58,19 +61,17 @@ export const AddLevel = ({ onAddNewLevel }: Props) => {
 
   return (
     <div>
-      <Button onPress={onOpen} color="primary">
+      <Button
+        onPress={onOpen}
+        color="primary"
+        startContent={<PlusIcon fill="currentColor" />}
+      >
         Add Level
       </Button>
-      <Modal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        placement="top-center"
-      >
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
         <ModalContent>
           <form onSubmit={handleAddLevel}>
-            <ModalHeader className="flex flex-col gap-1">
-              Add Level
-            </ModalHeader>
+            <ModalHeader className="flex flex-col gap-1">Add Level</ModalHeader>
             <ModalBody>
               <Input
                 label="Name_en"
@@ -101,11 +102,7 @@ export const AddLevel = ({ onAddNewLevel }: Props) => {
               <Button color="danger" variant="flat" onClick={onClose}>
                 Close
               </Button>
-              <Button
-                color="primary"
-                type="submit"
-                isLoading={isLoading}
-              >
+              <Button color="primary" type="submit" isLoading={isLoading}>
                 Add Level
               </Button>
             </ModalFooter>

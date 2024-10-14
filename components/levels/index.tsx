@@ -95,7 +95,7 @@ export const LevelsIndex = () => {
               input: "w-full",
               mainWrapper: "w-full",
             }}
-            placeholder="Search users"
+            placeholder="Search levels"
           />
           <SettingsIcon />
           <TrashIcon />

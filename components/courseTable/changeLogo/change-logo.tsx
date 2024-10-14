@@ -17,7 +17,7 @@ import toast from "react-hot-toast";
 import { Card, CardBody } from "@nextui-org/react";
 import { DeleteIcon } from "@/components/icons/table/delete-icon";
 import Courses from "@/app/api/Learn/Course";
-import { PictureIcon } from "@/components/icons/table/picture_icon";
+import { PictureIcon } from "@/components/icons/table/picture-icon";
 
 interface ApiResponse<T> {
   status: boolean;
@@ -139,7 +139,7 @@ function ChangeCourseLogo({
     <>
       <Tooltip content="Change Logo" color="success">
         <button onClick={onUploadModalOpen}>
-          <PictureIcon size={20} fill="#00FF7F" />
+          <PictureIcon size={25} fill="#979797" />
         </button>
       </Tooltip>
 
@@ -151,17 +151,17 @@ function ChangeCourseLogo({
         <ModalContent>
           {(onUploadModalClose) => (
             <>
-              <ModalHeader className="flex flex-row gap-1">
-                Add profile picture
+              <ModalHeader className="text-center">
+                Add Profile Picture
               </ModalHeader>
-              <ModalBody>
+              <ModalBody className="flex flex-col items-center gap-6 ">
                 <label
                   htmlFor="dropzone-file"
-                  className="flex flex-col items-center gap-8 py-8"
+                  className="flex flex-col items-center justify-center w-full gap-6 p-10  border-gray-300 rounded-lg text-center"
                   onDragOver={handleDragOver}
                   onDrop={handleDrop}
                 >
-                  <Avatar src={courseLogo} className="w-28 h-28 text-large" />
+                  <Avatar src={courseLogo} className="w-28 h-28 " />
 
                   <input
                     id="dropzone-file"
@@ -171,12 +171,12 @@ function ChangeCourseLogo({
                     onChange={handleFileChange}
                   />
 
-                  <div className="flex flex-col gap-4">
-                    <p className="text-center">
+                  <div className="flex flex-col items-center gap-4">
+                    <p className="text-gray-500">
                       Drag photo here <br /> — or —
                     </p>
 
-                    <div className="flex flex-row gap-8">
+                    <div className="flex gap-4">
                       <Button
                         variant="shadow"
                         color="primary"
@@ -189,10 +189,10 @@ function ChangeCourseLogo({
                         }}
                         isLoading={isLoadingUpload}
                       >
-                        Upload from computer
+                        Upload from Computer
                       </Button>
                       <Button variant="shadow" color="primary" size="sm">
-                        Take a picture
+                        Take a Picture
                       </Button>
                     </div>
                   </div>
@@ -203,7 +203,7 @@ function ChangeCourseLogo({
         </ModalContent>
       </Modal>
 
-      {/* Second Modal */}
+      {/* Second Modal - Crop Image */}
       <Modal
         backdrop="blur"
         isOpen={isCropModalOpen}
@@ -212,8 +212,8 @@ function ChangeCourseLogo({
         <ModalContent>
           {(onCropModalClose) => (
             <>
-              <ModalHeader>Second Modal</ModalHeader>
-              <ModalBody>
+              <ModalHeader className="text-center">Crop Image</ModalHeader>
+              <ModalBody className="flex flex-col items-center py-6">
                 <CropImg
                   courseLogo={UploadedImg || courseLogo}
                   onCropComplete={(croppedImageData: string) => {
@@ -223,12 +223,12 @@ function ChangeCourseLogo({
                   }}
                 />
               </ModalBody>
-              <ModalFooter></ModalFooter>
             </>
           )}
         </ModalContent>
       </Modal>
 
+      {/* Third Modal - Cropped Image */}
       <Modal
         backdrop="blur"
         isOpen={isCroppedModalOpen}
@@ -237,15 +237,15 @@ function ChangeCourseLogo({
         <ModalContent>
           {(onCroppedModalClose) => (
             <>
-              <ModalHeader>Cropped Image</ModalHeader>
-              <ModalBody>
+              <ModalHeader className="text-center">Cropped Image</ModalHeader>
+              <ModalBody className="flex flex-col items-center py-6">
                 <Image
                   src={croppedImg || courseLogo}
                   alt="Cropped Profile Pic"
-                  className="w-full rounded-full"
+                  className="w-40 h-40 rounded-full"
                 />
               </ModalBody>
-              <ModalFooter>
+              <ModalFooter className="flex justify-center gap-4">
                 <Button
                   variant="shadow"
                   color="primary"
@@ -259,7 +259,7 @@ function ChangeCourseLogo({
                   onClick={handleSavePicture}
                   isLoading={isUploading}
                 >
-                  Save as profile picture
+                  Save as Profile Picture
                 </Button>
               </ModalFooter>
             </>

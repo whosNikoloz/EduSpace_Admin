@@ -11,6 +11,7 @@ import {
 import React, { useState } from "react";
 import Courses from "@/app/api/Learn/Course";
 import toast from "react-hot-toast";
+import { PlusIcon } from "../icons/plus-icon";
 
 interface ApiResponse<T> {
   status: boolean;
@@ -64,7 +65,11 @@ export const AddCourse = ({ onAddNewCourse, levelid }: Props) => {
 
   return (
     <div>
-      <Button onPress={onOpen} color="primary">
+      <Button
+        onPress={onOpen}
+        color="primary"
+        startContent={<PlusIcon fill="currentColor" />}
+      >
         Add Course
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">

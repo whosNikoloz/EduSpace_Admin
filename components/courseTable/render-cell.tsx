@@ -3,6 +3,7 @@ import { DeleteCourse } from "./delete-course";
 import { EditCourse } from "./edit-course";
 import ChangeCourseLogo from "./changeLogo/change-logo";
 import Image from "next/image";
+import { NoPhotoIcon } from "../icons/table/no-photo-icon";
 
 interface CourseModel {
   courseId: number;
@@ -63,13 +64,17 @@ export const RenderCourseCell = ({
     case "logo":
       return (
         <div className="flex items-center">
-          <Image
-            src={Course.courseLogo}
-            alt={Course.courseName_en}
-            width={40}
-            height={40}
-            className="rounded-full"
-          />
+          {Course.courseLogo ? (
+            <Image
+              src={Course.courseLogo}
+              alt={Course.courseName_en}
+              width={40}
+              height={40}
+              className="rounded-full"
+            />
+          ) : (
+            <NoPhotoIcon fill="#979797" size={35} />
+          )}
         </div>
       );
     case "name_en":

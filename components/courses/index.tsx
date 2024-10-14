@@ -115,7 +115,7 @@ export const CoursesIndex = ({ levelid, levelName }: Props) => {
               input: "w-full",
               mainWrapper: "w-full",
             }}
-            placeholder="Search users"
+            placeholder="Search coruses"
           />
           <SettingsIcon />
           <TrashIcon />
