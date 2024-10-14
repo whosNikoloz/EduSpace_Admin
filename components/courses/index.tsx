@@ -76,6 +76,16 @@ export const CoursesIndex = ({ levelid, levelName }: Props) => {
       )
     );
   };
+
+  const handleChangelogo = (newPicture: string, courseId: number) => {
+    setCourses((prevCourses) =>
+      prevCourses.map((Course) =>
+        Course.courseId === courseId
+          ? { ...Course, courseLogo: newPicture }
+          : Course
+      )
+    );
+  };
   return (
     <div className="my-10 px-4 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
       <ul className="flex">
@@ -122,6 +132,7 @@ export const CoursesIndex = ({ levelid, levelName }: Props) => {
           LevelName={levelName}
           onUpdateCourse={hanldeCourseEdit}
           onDeleteCourse={handleCourseDelete}
+          onChangeLogo={handleChangelogo}
         />
       </div>
       <Toaster position="bottom-right" />

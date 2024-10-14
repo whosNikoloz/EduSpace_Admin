@@ -28,10 +28,12 @@ function ChangeCourseLogo({
   courseLogo,
   courseid,
   courseName,
+  onUpdateLogo,
 }: {
   courseLogo: string;
   courseid: number;
   courseName: string;
+  onUpdateLogo(newPicture: string, courseId: number): void;
 }) {
   const {
     isOpen: isUploadModalOpen,
@@ -87,6 +89,7 @@ function ChangeCourseLogo({
       )) as ApiResponse<any>;
 
       if (response.status) {
+        onUpdateLogo(response.result, courseid);
         toast.success("Course added successfully");
       } else {
         toast.error(response.result);

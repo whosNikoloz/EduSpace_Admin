@@ -39,6 +39,7 @@ interface Props {
   LevelName: string;
   onDeleteCourse: (courseId: number) => void;
   onUpdateCourse: (updatedCourse: CourseModel) => void;
+  onChangeLogo: (newPicture: string, courseId: number) => void;
 }
 
 export const TableWrapper = ({
@@ -46,6 +47,7 @@ export const TableWrapper = ({
   LevelName,
   onDeleteCourse,
   onUpdateCourse,
+  onChangeLogo,
 }: Props) => {
   const [localCourses, setCourses] = useState<CourseModel[]>(Courses);
   useEffect(() => {
@@ -59,6 +61,9 @@ export const TableWrapper = ({
 
   const hanldeCourseEdit = (updatedCourse: CourseModel) => {
     onUpdateCourse(updatedCourse);
+  };
+  const handleChangeLogo = (newPicture: string, courseId: number) => {
+    onChangeLogo(newPicture, courseId);
   };
 
   if (Courses.length === 0) {
@@ -90,6 +95,7 @@ export const TableWrapper = ({
                     LevelName: LevelName,
                     onCourseDelete: handleCourseDelete, // Correct function name
                     onCourseEdit: hanldeCourseEdit, // Correct function name
+                    onChangeLogo: handleChangeLogo,
                   })}
                 </TableCell>
               ))}

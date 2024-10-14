@@ -246,7 +246,7 @@ const Courses = () => {
       if (response.ok) {
         const data = await response.json();
         if (data.status) {
-          return { status: true, result: data.result };
+          return { status: true, result: pictureUrl };
         } else {
           return { status: false, result: data.result };
         }

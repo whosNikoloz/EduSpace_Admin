@@ -21,6 +21,7 @@ interface Props {
   columnKey: string | React.Key;
   onCourseDelete?: (CourseId: number) => void;
   onCourseEdit?: (Course: CourseModel) => void;
+  onChangeLogo(newPicture: string, courseId: number): void;
 }
 
 export const RenderCourseCell = ({
@@ -29,6 +30,7 @@ export const RenderCourseCell = ({
   columnKey,
   onCourseDelete,
   onCourseEdit,
+  onChangeLogo,
 }: Props) => {
   // @ts-ignore
   const cellValue = Course[columnKey];
@@ -49,6 +51,12 @@ export const RenderCourseCell = ({
 
   const handleCourseView = (CourseId: number) => {
     console.log("View Course", CourseId);
+  };
+
+  const handleChangeLogo = (newPicture: string, courseId: number) => {
+    if (onChangeLogo) {
+      onChangeLogo(newPicture, courseId);
+    }
   };
 
   switch (columnKey) {
@@ -95,6 +103,7 @@ export const RenderCourseCell = ({
             courseLogo={Course.courseLogo}
             courseid={Course.courseId}
             courseName={LevelName}
+            onUpdateLogo={handleChangeLogo}
           />
           <EditCourse onUpdateCourse={handleCourseEdit} Course={Course} />
           <DeleteCourse
