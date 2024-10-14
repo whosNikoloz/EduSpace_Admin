@@ -1,4 +1,26 @@
-import { getAuthCookie } from "@/actions/auth.action";
+import "firebase/auth";
+import { initializeApp } from "firebase/app";
+import {
+  getStorage,
+  ref,
+  deleteObject,
+  getDownloadURL,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { deleteAuthCookie, getAuthCookie } from "@/actions/auth.action";
+
+const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+};
+
+const app = initializeApp(firebaseConfig);
+const storage = getStorage(app);
 
 const serverUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -28,7 +50,10 @@ const Courses = () => {
 
   const GetCoursesByLevelId = async (levelId: number) => {
     try {
-      const response = await fetch(serverUrl + `CoursesByLevel/${levelId}`, {
+      if (!serverUrl) {
+        throw new Error("Server URL is not defined");
+      }
+      const response = await fetch(serverUrl + levelId + `/course`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -82,10 +107,10 @@ const Courses = () => {
     }
   };
 
-  const handleRemoveCourse = async (courseId: number) => {
+  const handleRemoveCourse = async (courseId: number, logoPath: string) => {
     try {
       const token = await getAuthCookie();
-      const response = await fetch(serverUrl + "courses/" + courseId, {
+      const response = await fetch(serverUrl + "course/" + courseId, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -94,6 +119,13 @@ const Courses = () => {
       });
 
       if (response.ok) {
+        if (logoPath) {
+          try {
+            await deleteFileFromFirebaseStorage(logoPath);
+          } catch (error) {
+            console.error("Error deleting old picture:", error);
+          }
+        }
         const responseData = await response.json();
 
         if (responseData.status) {
@@ -172,10 +204,134 @@ const Courses = () => {
     }
   };
 
+  const ChangeCourseLogo = async (
+    picture: File,
+    oldpicture: string,
+    courseid: number,
+    LevelName: string
+  ) => {
+    try {
+      // Delete the old picture if it exists
+      if (oldpicture) {
+        try {
+          await deleteFileFromFirebaseStorage(oldpicture);
+        } catch (error) {
+          console.error("Error deleting old picture:", error);
+        }
+      }
+
+      // Create folder logic (Firebase will create it automatically when uploading)
+      const folderPath = `Learn/Courses/${LevelName}`;
+
+      // Upload the new picture to the correct folder path
+      const pictureUrl = picture
+        ? await uploadFileToFirebaseStorage(picture, folderPath)
+        : null;
+
+      // Send the uploaded picture URL to the server
+      const token = await getAuthCookie();
+      const response = await fetch(serverUrl + "course/UploadLogo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // Include the bearer token in the Authorization header
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          courseid,
+          pictureUrl,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.status) {
+          return { status: true, result: data.result };
+        } else {
+          return { status: false, result: data.result };
+        }
+      } else {
+        return { status: false, result: "An unexpected error occurred" };
+      }
+    } catch (error) {
+      return { status: false, result: error };
+    }
+  };
+
+  const uploadFileToFirebaseStorage = async (
+    file: File,
+    folderName: string
+  ) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const uniqueFileName = `${Date.now()}-${Math.random()
+          .toString(36)
+          .substring(2)}-${file.name}`;
+        const fileRef = ref(storage, `${folderName}/${uniqueFileName}`);
+        const uploadTask = uploadBytesResumable(fileRef, file);
+
+        // Listen for state changes, errors, and completion of the upload.
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            // You can monitor the progress here if needed.
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          },
+          (error) => {
+            console.error("Error uploading file:", error);
+            reject(error);
+          },
+          async () => {
+            try {
+              // Upload completed statusly, get the download URL.
+              const downloadURL = await getDownloadURL(fileRef);
+              resolve(downloadURL);
+            } catch (error) {
+              console.error("Error getting download URL:", error);
+              reject(error);
+            }
+          }
+        );
+
+        // Wait for the upload to complete.
+        await uploadTask;
+      } catch (error) {
+        console.error("Error uploading file to Firebase Storage:", error);
+        reject(error);
+      }
+    });
+  };
+
+  const deleteFileFromFirebaseStorage = async (fileUrl: string) => {
+    try {
+      const storage = getStorage();
+      const fileRef = ref(storage, fileUrl);
+
+      // Check if the file exists
+      const url = await getDownloadURL(fileRef);
+      if (url) {
+        // Delete the file
+        await deleteObject(fileRef);
+      }
+    } catch (error) {
+      if ((error as { code: string }).code === "storage/object-not-found") {
+        // File doesn't exist
+      } else {
+        // Some other error occurred
+        console.error("Error deleting file:", error);
+      }
+    }
+  };
+
   const handleAddCourse = async (LevelId: number, courseData: any) => {
     try {
       const token = await getAuthCookie();
-      const response = await fetch(serverUrl + "course/" + LevelId, {
+      if (!serverUrl) {
+        throw new Error("Server URL is not defined");
+      }
+
+      const response = await fetch(serverUrl + LevelId + "/course", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -213,6 +369,7 @@ const Courses = () => {
     handleAddCourse,
     handleUpdateCourse,
     handleRemoveCourse,
+    ChangeCourseLogo,
   };
 };
 

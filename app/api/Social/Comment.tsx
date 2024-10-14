@@ -17,13 +17,13 @@ const docker_social_API = "https://185.139.57.56:8081/api/v1/Social/";
 const social_conveyAPI = "https://widebluerock55.conveyor.cloud/api/v1/Social/";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCpTtUB_NqmFfsoccOBozkZ8tMlpzTd0U0",
-  authDomain: "eduspace-a81b5.firebaseapp.com",
-  projectId: "eduspace-a81b5",
-  storageBucket: "eduspace-a81b5.appspot.com",
-  messagingSenderId: "121358878167",
-  appId: "1:121358878167:web:789c88cd50bdc3ada3b792",
-  measurementId: "G-F18D5YQKCK",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
 const app = initializeApp(firebaseConfig);

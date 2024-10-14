@@ -31,9 +31,10 @@ interface ApiResponse<T> {
 
 interface Props {
   levelid: number;
+  levelName: string;
 }
 
-export const CoursesIndex = ({ levelid }: Props) => {
+export const CoursesIndex = ({ levelid, levelName }: Props) => {
   const [courses, setCourses] = useState<CourseModel[]>([]);
 
   const CourseAPi = Courses();
@@ -118,6 +119,7 @@ export const CoursesIndex = ({ levelid }: Props) => {
       <div className="max-w-[95rem] mx-auto w-full">
         <TableWrapper
           Courses={courses}
+          LevelName={levelName}
           onUpdateCourse={hanldeCourseEdit}
           onDeleteCourse={handleCourseDelete}
         />

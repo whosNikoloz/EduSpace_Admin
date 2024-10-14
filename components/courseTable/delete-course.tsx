@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 
 interface Props {
   CourseId: number;
+  LogoPath: string;
   onCourseDelete: (CourseId: number) => void;
 }
 interface ApiResponse<T> {
@@ -24,7 +25,7 @@ interface ApiResponse<T> {
   result?: T;
 }
 
-export const DeleteCourse = ({ CourseId, onCourseDelete }: Props) => {
+export const DeleteCourse = ({ CourseId, LogoPath, onCourseDelete }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -35,7 +36,8 @@ export const DeleteCourse = ({ CourseId, onCourseDelete }: Props) => {
   const handleCourseRemove = async (CourseId: number) => {
     setIsLoading(true);
     const response: ApiResponse<any> = (await CourseAPi.handleRemoveCourse(
-      CourseId
+      CourseId,
+      LogoPath
     )) as ApiResponse<any>;
     if (response.status) {
       onCourseDelete(CourseId);

@@ -14,6 +14,7 @@ import Courses from "@/app/api/Learn/Course";
 import { RenderCourseCell } from "./render-cell";
 
 const columns = [
+  { name: "Logo", uid: "logo" },
   { name: "NAME_EN", uid: "name_en" },
   { name: "NAME_KA", uid: "name_ka" },
   { name: "FORMATED NAME", uid: "f_name" },
@@ -35,18 +36,21 @@ interface CourseModel {
 }
 interface Props {
   Courses: CourseModel[];
+  LevelName: string;
   onDeleteCourse: (courseId: number) => void;
   onUpdateCourse: (updatedCourse: CourseModel) => void;
 }
 
 export const TableWrapper = ({
   Courses,
+  LevelName,
   onDeleteCourse,
   onUpdateCourse,
 }: Props) => {
   const [localCourses, setCourses] = useState<CourseModel[]>(Courses);
   useEffect(() => {
     setCourses(Courses);
+    console.log(Courses);
   }, [Courses]);
 
   const handleCourseDelete = (courseId: number) => {
@@ -83,6 +87,7 @@ export const TableWrapper = ({
                   {RenderCourseCell({
                     Course: Course, // Pass the Course instead of user
                     columnKey: column.uid,
+                    LevelName: LevelName,
                     onCourseDelete: handleCourseDelete, // Correct function name
                     onCourseEdit: hanldeCourseEdit, // Correct function name
                   })}
